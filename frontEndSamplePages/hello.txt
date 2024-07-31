@@ -1,0 +1,29 @@
+
+
+const addproduct async (req,res)=>{
+    
+    const { productName, productCategory, productPrice, Stock, Brand, ProductDescription } = req.body;
+      
+    console.log(productName);
+    console.log(productCategory);
+    console.log(productPrice);
+   console.log(Stock);
+   console.log(Brand);
+   console.log(ProductDescription);
+
+   
+    // Extract and save cropped images
+    const croppedImages = req.files.filter(file => file.fieldname === 'croppedImages');
+    croppedImages.forEach((file, index) => {
+        // Generate a unique filename
+        const fileName = `${Date.now()}.png`;
+        const filePath = path.join(uploadsDir, fileName);
+
+        // Save the buffer directly as an image file
+        fs.writeFileSync(filePath, file.buffer);
+        console.log(`File ${fileName} saved successfully.`);
+    });
+
+    res.redirect('/success');
+}
+

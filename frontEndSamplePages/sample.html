@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>File Upload</h2>
+        <form id="fileUploadForm">
+            <div class="mb-3">
+                <label for="fileInput" class="form-label">Upload file</label>
+                <input type="file" class="form-control" id="fileInput" required>
+                <div id="fileSizeError" class="text-danger mt-2" style="display: none;">File size exceeds the allowed limit.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('fileUploadForm').addEventListener('submit', function(event) {
+            const fileInput = document.getElementById('fileInput');
+            const maxSize = 5 * 1024 * 1024; // 5 MB in bytes
+            const fileSizeError = document.getElementById('fileSizeError');
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (file.size > maxSize) {
+                    event.preventDefault(); // Prevent form submission
+                    fileSizeError.style.display = 'block';
+                } else {
+                    fileSizeError.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

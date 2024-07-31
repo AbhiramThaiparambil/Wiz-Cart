@@ -1,0 +1,7 @@
+Swal.fire({
+              title: 'Error',
+              text: data.message,
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          
