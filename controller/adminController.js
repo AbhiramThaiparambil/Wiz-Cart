@@ -475,12 +475,15 @@ const logout = async (req, res) => {
   }
 };
 
-
- const orderMangement =async (req,res)=>{
+const orderMangement = async (req, res) => {
   try {
-   
-  
-     const orders = await Order.aggregate([
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalOrders = await Order.countDocuments();
+
+    const orders = await Order.aggregate([
       {
         $lookup: {
           from: "products",
@@ -489,17 +492,24 @@ const logout = async (req, res) => {
           as: "newone"
         }
       },
-      { $sort: { orderDate: -1 } }
+      { $sort: { orderDate: -1 } },
+      { $skip: skip },
+      { $limit: limit }
     ]);
-   
-    res.render('admin/oderMangement',{orders})
 
-
+    res.render('admin/oderMangement', {
+      orders,
+      currentPage: page,
+      totalPages: Math.ceil(totalOrders / limit),
+      limit: limit
+    });
 
   } catch (error) {
     console.log(error.message);
   }
- }
+};
+
+
 
 
 
@@ -516,7 +526,6 @@ const updateStatus =async (req,res)=>{
 
          
      console.log('hello');
-     // Find the order by its ID
      const order = await Order.findOne({ _id:object_id });
  
     
@@ -558,7 +567,19 @@ res.redirect('/orderMangement')
 
 
 
+const singelOderhistory = async(req,res)=>{
+  try {
+     
+    console.log('hello');
+    
+    const oderId=req.query.oderId
+    const productIndex=req.query.productIndex
+    console.log(`this is my order id ${oderId}/n this is my productIndex ${productIndex}`);
 
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 
 
@@ -597,6 +618,7 @@ module.exports = {
   editCategory,
   orderMangement,
   updateStatus,
+  singelOderhistory,
   logout,
 
 };

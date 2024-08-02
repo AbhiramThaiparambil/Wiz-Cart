@@ -163,7 +163,7 @@
     function startResendCooldown() {
         let secondsLeft = localStorage.getItem('cooldownSecondsLeft') || resendCooldownTime;
         document.getElementById('resendBtn').style.display = 'none'; // Hide resend button during cooldown
-        document.getElementById('cooldownTimer').innerText = `Cooldown: ${secondsLeft}s`; // Display cooldown timer message
+        document.getElementById('cooldownTimer').innerText = `    `; // Display cooldown timer message
 
         if (resendCooldownInterval) {
             clearInterval(resendCooldownInterval);
@@ -171,7 +171,7 @@
 
         resendCooldownInterval = setInterval(() => {
             secondsLeft--;
-            document.getElementById('cooldownTimer').innerText = `Cooldown: ${secondsLeft}s`;
+            document.getElementById('cooldownTimer');
             localStorage.setItem('cooldownSecondsLeft', secondsLeft);
             if (secondsLeft <= 0) {
                 clearInterval(resendCooldownInterval);
