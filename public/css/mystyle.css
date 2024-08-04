@@ -148,7 +148,7 @@
   display: flex;
   align-items: center;
   background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
+  border: px solid #f5c6cb;
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 15px;
@@ -160,4 +160,80 @@
   color: #dc3545;
   margin-right: 10px;
   font-size: 1.5rem;
+}
+
+
+.stock-alert {
+  background-color: #fff;
+  border: 0.5px solid #dc3545;
+  border-radius: 8px;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  max-width: 300px;
+  overflow: hidden;
+}
+
+.stock-alert-content {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff0f0;
+}
+
+.stock-alert-icon {
+  font-size: 2.5rem;
+  color: #dc3545;
+  margin-right: 15px;
+}
+
+.stock-alert-text {
+  flex: 1;
+}
+
+
+
+.stock-alert-message {
+  color: #666;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.stock-alert-footer {
+  background-color: #f8f9fa;
+  padding: 15px;
+  text-align: center;
+}
+
+.product-image-container {
+  position: relative;
+}
+
+.zoom-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.zoom-image {
+  width: 100%;
+  height: auto;
+}
+
+.zoom-lens {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: none;
+  display: none;
+}
+
+.zoom-result {
+  position: absolute;
+  top: 0;
+  left: 110%; /* Adjust this value to position the zoom result */
+  border: 1px solid #d4d4d4;
+  width: 300px;
+  height: 300px;
+  background-repeat: no-repeat;
+  display: none;
 }

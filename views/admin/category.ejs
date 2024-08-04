@@ -503,15 +503,20 @@ function validateCategoryInput() {
     event.preventDefault(); // Prevent the default form submission
 
     Swal.fire({
-        title:'<span style="color: #ffffff;"> ❌ Are you sure you want to delete this product?"</span>',
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        background:'#000000',
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
+  
+    html: '<span style="color: #000000;"> Are you sure you want to delete this Categorie?</span>',
+    showCancelButton: true,
+    background: '#ffffff', // Set the background to white
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "delete",
+    imageUrl: 'https://assets-v2.lottiefiles.com/a/e09820ea-116b-11ee-8e93-4f2a1602d144/HdbA8EJlUN.gif', // Add your image path here
+    imageWidth: 300, // Optional: adjust the width of the image
+    imageHeight: 150, // Optional: adjust the height of the image
+    imageAlt: 'Custom image', // Optional: add an alt text for the image
+})
+
+.then((result) => {
         if (result.isConfirmed) {
             Swal.fire({
                 title: "Deleted!",
@@ -615,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide the toast message after 3 seconds (3000 milliseconds)
             setTimeout(function() {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 7000);
         }
     }); 
 

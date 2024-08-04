@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .invoice-card {
+            border: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .invoice-title {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .table-header {
+            background-color: #6c757d;
+            color: white;
+        }
+        .total-row {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card invoice-card">
+                    <div class="card-body">
+                        <div class="invoice-title">
+                            <h2 class="text-center mb-0">Invoice</h2>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-sm-6">
+                                <h6 class="mb-3 text-primary">shipping address:</h6>
+                                <div>
+                                    <strong>Client Name</strong>
+                                </div>
+                                <div>Client Street Address</div>
+                                <div>Client City, State ZIP</div>
+                                <div>Email: client@email.com</div>
+                                <div>Phone: +1 987 654 3210</div>
+                            </div>
+                        </div>
+                        <div class="table-responsive-sm">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr class="table-header">
+                                        <th>Photo</th>
+                                        <th>Name</th>                                       
+                                        <th class="text-right">Quantity</th>
+                                        <th class="text-right">Price</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><img src="placeholder.jpg" alt="Product 1" class="product-image"></td>
+                                        <td>Description for Item 1</td>
+                                        <td class="text-right">1</td>
+                                        <td class="text-right">$100.00</td>
+                                        <td class="text-right">$100.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><img src="placeholder.jpg" alt="Product 2" class="product-image"></td>
+                                        <td>Description for Item 2</td>
+                                        <td class="text-right">2</td>
+                                        <td class="text-right">$75.00</td>
+                                        <td class="text-right">$150.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-5 ms-auto">
+                                <table class="table table-clear">
+                                    <tbody>
+                                        <tr>
+                                            <td class="left">
+                                                <strong>Subtotal</strong>
+                                            </td>
+                                            <td class="right">$250.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="left">
+                                                <strong>Tax (10%)</strong>
+                                            </td>
+                                            <td class="right">$25.00</td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <td class="left">
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="right">
+                                                <strong>$275.00</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

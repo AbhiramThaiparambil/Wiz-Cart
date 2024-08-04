@@ -170,14 +170,15 @@
             <table class="table table-hover table-bordered">
                 <thead class="table-dark">
                     <tr>
-                        <th></th>
+                      
                         <th>PRODUCT</th>
-                        <th>USER NAME</th>
+                        <th>quantity</th>
+                        <th>USERNAME</th>
                         <th>STATUS</th>
-                        <th>ORDER DATE</th>
-                        <th>CUSTOMERS DETAILS</th>
+                        <th>ORDER&nbspDATE</th>
+                        <th>CUSTOMERS&nbspDETAILS</th>
                         <th>EDIT STATUS</th>
-                        <th></th>
+                       
                     </tr>
                 </thead>
                 <tbody>
@@ -185,8 +186,10 @@
                         <% order.product.forEach((product, index) => { %>
                             <% if (order.newone[index]) { %>
                                 <tr class="<%= product.status.toLowerCase() === 'cancelled' ? 'table-danger' : product.status.toLowerCase() === 'pending' ? 'table-warning' : product.status.toLowerCase() === 'delivered' ? 'table-success' : '' %> align-middle">
-                                    <td></td>
+                                   
                                     <td><%= order.newone[index].product_name || 'Product Name Not Available' %></td>
+                                    <td><%= product.quantity %></td>
+                                     
                                     <td><%= order.name %></td>
                                     <td><%= product.status %></td>
                                     <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
@@ -217,7 +220,7 @@
                                             <button type="button" onclick="editStatus('<%= product._id %>')" class="btn btn-primary mt-2">Update</button>
                                         </form>
                                     </td>
-                                    <td></td>
+                                    
                                 </tr>
                             <% } %>
                         <% }) %>

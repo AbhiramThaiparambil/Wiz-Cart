@@ -151,13 +151,12 @@
                                             <i class="fa-solid fa-minus" style="color: #000000;"></i>
                                         </button>
                                         <span class="quantity ml-1 mr-2"><%= item.quantity %></span>
-                                        <% if (item.quantity < item.productDetails.in_stock) { %>
+                                        
                                             <button type="button" class="btn btn-light increment-btn" style="border: 0.5px solid rgb(56, 56, 56);">
                                                 <i class="fa-solid fa-plus" style="color: #000000;"></i>
                                             </button>
-                                        <% } else { %>
-                                            <!-- <p style="color: red; margin-left: 10px;">Out of stock</p> -->
-                                        <% } %>
+                                       
+                                        
                                     </div>
                                     <div class="one-eight text-center">
                                         <div class="display-tc">
@@ -605,7 +604,6 @@ document.querySelectorAll('.increment-btn').forEach(button => {
       });
 
       if (currentQuantity >= inStock) {
-        this.style.display = 'none';
         Swal.fire({
           icon: 'warning',
           title: 'Out of Stock',
