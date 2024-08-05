@@ -6,7 +6,8 @@ const Category = require("../model/categoryModel");
 const Order = require("../model/orders.model");
 const path = require("path");
 const fs = require("fs");
-const { log } = require("console");
+const { log, error } = require("console");
+const Coupons=require('../model/couponModel')
 require("passport");
 
 // ADMIN LOGIN  //GET
@@ -557,6 +558,129 @@ const singelOderhistory = async (req, res) => {
   }
 };
 
+const couponMangemnt= async (req,res)=>{
+  try {
+
+    const coupon= await Coupons.find({})
+    let toast = req.flash('info') || []; 
+
+   
+    res.render('admin/Coupons',{coupons:coupon,toast})
+    
+  } catch (error) {
+     console.log(error.message);
+     
+  }
+}
+
+
+
+const createCoupon= async (req,res)=>{
+  try {
+    
+    const{couponCode,
+      discount,
+      expiryDate,
+      description}=req.body
+
+
+
+      const newcoupon= new Coupons({
+        Coupon_Code:couponCode,
+        discount:discount,
+        expiry_Date:expiryDate,
+        Description:description,
+        is_active:true
+      })
+
+
+        const result= await newcoupon.save()
+       if(result){
+        res.status(200).json({ message: 'Coupon created successfully!'});
+       }
+        console.log(result);
+        
+      
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const deleteCoupon= async (req,res)=>{
+    try {
+      const id=req.body.id 
+ 
+     const isDelete=await Coupons.findByIdAndDelete(id)
+       
+     if(isDelete){
+      res.status(200).json({ message: 'Coupon deleted successfully' });
+     }else{
+      res.status(500).json({ error: 'Coupon deleted successfully' });
+
+     }
+     
+    } catch (error) {
+      console.log(error);
+      
+    }
+}
+const unhideCoupon = async (req, res) => {
+  try {
+    console.log('This is unhide coupon controller');
+    const id = req.body.Unhide_id;
+    console.log(id);
+
+    const isShow = await Coupons.updateOne({ _id: id }, { $set: { is_active: true } });
+
+    if (isShow) {
+      res.status(200).json({ message: 'Coupon unhidden successfully' });
+    } 
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'An error occurred while unhiding the coupon' });
+  }
+};
+
+
+
+
+const hideCoupon = async (req, res) => {
+  try {
+    console.log('This is hide coupon controller');
+    const id = req.body.hide_id;
+    console.log(id);
+
+    const isShow = await Coupons.updateOne({ _id: id }, { $set: { is_active: false } });
+
+    if (isShow) {
+      res.status(200).json({ message: 'Coupon hidden successfully' });
+    } 
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'An error occurred while hiding the coupon' });
+  }
+};
+
+const updateCoupon=async(req,res)=>{
+  try {
+    const{edit_id,Edit_couponCode,Edit_discount,Edit_expiryDate,Edit_description}=req.body
+   
+    
+      const edit=await Coupons.updateOne({_id:edit_id},{$set:{Coupon_Code:Edit_couponCode,discount:Edit_discount,expiry_Date:Edit_expiryDate,Description:Edit_description}})
+if(edit){
+
+      req.flash('info', 'Coupon edited successfully ✅');
+  res.redirect('/couponMangement')
+
+}
+
+    
+  } catch (error) {
+    
+  }
+}
+
+
 module.exports = {
   adminLogin,
   adminLogindata,
@@ -580,5 +704,11 @@ module.exports = {
   orderMangement,
   updateStatus,
   singelOderhistory,
+  createCoupon,
+  couponMangemnt,
+  deleteCoupon,
+ unhideCoupon,
+ hideCoupon,
+ updateCoupon,
   logout,
 };
