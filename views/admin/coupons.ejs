@@ -181,7 +181,8 @@
             <thead>
               <tr>
                 <th scope="col">Coupon Code</th>
-                <th scope="col">Discount (%)</th>
+                <th scope="col">discount_Price</th>
+                <th cope="col">minPurchaseAmount</th>
                 <th scope="col">Expiry Date</th>
                 <th scope="col">Description</th>
                 <th scope="col">Delete</th>
@@ -198,7 +199,8 @@
                 <% coupons.forEach((coupon) => { %>
                     <tr>
                       <td><%= coupon.Coupon_Code %></td>
-                      <td><%= coupon.discount %></td>
+                      <td>₹<%=coupon.discount_Price %></td>
+                      <td>₹<%= coupon.minPurchaseAmount %></td>
                       <td><%= coupon.expiry_Date %></td>
                       <td><%= coupon.Description %></td>
                       
@@ -212,9 +214,12 @@
                           onclick='editCoupon(
                             "<%= coupon._id %>",
                             "<%= coupon.Coupon_Code %>",
-                            "<%= coupon.discount %>",
+                            "<%= coupon.discount_Price%>",
                             "<%= coupon.expiry_Date %>",
-                            "<%= coupon.Description %>")' 
+                            "<%= coupon.Description %>",
+                            "<%= coupon.minPurchaseAmount %>"
+                            
+                            )' 
                           class="btn btn-warning btn-sm" title="Edit Coupon">
                           <i class="fas fa-edit"></i> Edit
                         </button>
@@ -264,9 +269,16 @@
                                 <input type="text" class="form-control" id="edit_couponCode" name="Edit_couponCode" required>
                             </div>
                             <div class="mb-3">
-                                <label for="edit_discount" class="form-label">Discount (%)</label>
-                                <input type="number" class="form-control" id="edit_discount" name="Edit_discount" min="0" max="100" >
+                                <label for="edit_discount" class="form-label">Discount AMOUNT</label>
+                                <input type="number" class="form-control" id="edit_discount" name="Edit_discount" min="0"  >
                             </div>
+                           
+
+                            <div class="mb-3">
+                              <label for="edit_discount" class="form-label">minPurchaseAmount</label>
+                              <input type="number" class="form-control" id="Edit_minPurchaseAmount" name="Edit_minPurchaseAmount" min="0"   >
+                            </div>
+
                             <div class="mb-3">
                                 <label for="edit_expiryDate" class="form-label">Expiry Date</label>
                                 <input type="date" class="form-control" id="edit_expiryDate" name="Edit_expiryDate" >
@@ -319,9 +331,20 @@
                     </div>
                     <div class="mb-3">
                       <label for="discount" class="form-label">Discount (%)</label>
-                      <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" required onkeyup="validateDiscount()">
+                      <input type="number" class="form-control" id="discount" name="discount" min="0" required onkeyup="validateDiscount()">
                       <div id="discountError" class="error-message"></div>
                     </div>
+                   
+
+                    <div class="mb-3">
+                      <label for="discount" class="form-label">MIN PURCHASE AMOUNT</label>
+                      <input type="number" class="form-control" id="minPurchase" name="minPurchase" min="0" required onkeyup="validateDiscount()">
+                      <div id="discountError" class="error-message"></div>
+                    </div>
+
+
+
+
                     <div class="mb-3">
                       <label for="expiryDate" class="form-label">Expiry Date</label>
                       <input type="date" class="form-control" id="expiryDate" name="expiryDate" required>
@@ -490,7 +513,7 @@
             const discount = document.getElementById('discount').value;
             const expiryDate = document.getElementById('expiryDate').value;
             const description = document.getElementById('description').value;
-
+            const  minPurchaseAmount=document.getElementById('minPurchase').value
             if (!descriptionPattern.test(description)) {
               alert("Description must have at least 3 letters.");
               return false;
@@ -515,7 +538,8 @@
                 couponCode,
                 discount,
                 expiryDate,
-                description
+                description,
+           minPurchaseAmount
               })
             });
 
@@ -645,12 +669,14 @@ async function hideCoupon(hide_id) {
 }
 
 
-function editCoupon(id, code, discount, expiryDate, description) {
+function editCoupon(id, code, discount, expiryDate, description,minPurchaseAmount) {
     document.getElementById('edit_couponCode').value = code;
     document.getElementById('edit_discount').value = discount;
     document.getElementById('edit_expiryDate').value = expiryDate;
     document.getElementById('edit_description').value = description;
     document.getElementById('edit_id').value=id
+    
+    document.getElementById('Edit_minPurchaseAmount').value=minPurchaseAmount
     // Trigger the modal
     var editModal = new bootstrap.Modal(document.getElementById('editCouponModal'));
     editModal.show();

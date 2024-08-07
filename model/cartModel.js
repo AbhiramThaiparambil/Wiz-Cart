@@ -10,8 +10,25 @@ const cart = new mongoose.Schema({
     Product: [
         {
             productId: mongoose.Types.ObjectId,
-            quantity: Number
+            quantity: Number,
+            totalAmount:Number
         }
     ],
+    totalPrice:{
+        type:Number,
+        required:true
+      },
+        discount:{
+          type:Object,
+        },
+        coupon:{
+            type:String,
+            default:''
+         },
+        finalPrice:{
+          type:Number,
+          required:true
+        }
+      
 });
 module.exports = mongoose.model("cart",cart);

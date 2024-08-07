@@ -581,16 +581,18 @@ const createCoupon= async (req,res)=>{
     const{couponCode,
       discount,
       expiryDate,
-      description}=req.body
+      description,
+      minPurchaseAmount}=req.body
 
 
 
       const newcoupon= new Coupons({
         Coupon_Code:couponCode,
-        discount:discount,
+        discount_Price:discount,
         expiry_Date:expiryDate,
         Description:description,
-        is_active:true
+        minPurchaseAmount:minPurchaseAmount,
+        is_active:true,
       })
 
 
@@ -663,10 +665,11 @@ const hideCoupon = async (req, res) => {
 
 const updateCoupon=async(req,res)=>{
   try {
-    const{edit_id,Edit_couponCode,Edit_discount,Edit_expiryDate,Edit_description}=req.body
+    log('helloiujghyuifiiiiiifififififififififififififififif')
+    const{edit_id,Edit_couponCode,Edit_discount,Edit_expiryDate,Edit_minPurchaseAmount,Edit_description}=req.body
    
-    
-      const edit=await Coupons.updateOne({_id:edit_id},{$set:{Coupon_Code:Edit_couponCode,discount:Edit_discount,expiry_Date:Edit_expiryDate,Description:Edit_description}})
+     
+      const edit=await Coupons.updateOne({_id:edit_id},{$set:{Coupon_Code:Edit_couponCode,discount_Price:Edit_discount,expiry_Date:Edit_expiryDate, minPurchaseAmount:Edit_minPurchaseAmount,Description:Edit_description}})
 if(edit){
 
       req.flash('info', 'Coupon edited successfully ✅');

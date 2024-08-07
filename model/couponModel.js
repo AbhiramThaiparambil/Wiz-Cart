@@ -6,7 +6,7 @@ const couponSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    discount: {
+    discount_Price: {
         type: Number,
         required: true
     },
@@ -17,6 +17,9 @@ const couponSchema = new mongoose.Schema({
     Description: {
         type: String,
         required: true
+    },
+    minPurchaseAmount:{
+        type:Number
     },
     is_active:{
        type:Boolean,
