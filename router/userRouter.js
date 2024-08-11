@@ -14,6 +14,13 @@ userRoute.use(nocache());
 userRoute.get("/", (req, res) => {
   res.redirect("/wizcart");
 });
+
+// paymentController
+const paymentController=require('../controller/paymentController');
+const wishlistModel = require("../model/wishlistModel");
+
+
+
 // LOGIN ------------------------ 
 userRoute.get("/login", isLogout, userController.login);
 userRoute.post("/loginData", isLogout, userController.loginData);
@@ -68,17 +75,42 @@ userRoute.get("/cart",isLogin,userController.cart);
 userRoute.get("/checkOut",isLogin,userController.checkOut);
 
 // ORDER ------------------------
-userRoute.post("/confirmOrder",isLogin,userController.createOrder);
+userRoute.post("/confirmOrder",isLogin,paymentController.createOrder);
 userRoute.get("/orderSuccess",isLogin,userController.orderSuccess);
 userRoute.post("/ordercancellation",isLogin,userController.cancellProductStatus);
 userRoute.get("/getOrderHistory",isLogin,userController.getOrderHistory);
 userRoute.put("/quantityUpdate",isLogin,userController.quantityUpdate);
 userRoute.delete("/removeItem/id:id",isLogin,userController.removeItem);
+userRoute.post('/orderreturn',userController.orderReturn)
+
+
+
+
+
+
+
 //coupon
 userRoute.post('/coupon',userController.Coupon )
 userRoute.post('/applyCoupon',userController.applyCoupon)
 userRoute.delete('/removeCoupon',userController.removeCoupon)
 
+userRoute.post('/api/payment/capture', paymentController.verifyPayment);
+
+
+// wishlist
+userRoute.get('/wishlist',userController.getWishlist)
+userRoute.put('/wishlist/remove/:id', userController.removeWishlist)
+  
+
+// wallet
+
+userRoute.get('/wallet',isLogin,userController.getWallet)
+
+userRoute.post('/addtowishlist',userController.addToWishlist)
+
 module.exports = {
   userRoute,
 };
+
+
+

@@ -66,6 +66,28 @@
 			.zoom-img:hover img {
 				transform: scale(1.2); /* Increased zoom effect on hover */
 			}
+
+			
+
+
+.button-container {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Adjust the space between the buttons */
+    }
+
+    .btn-addtocart,
+    .button-wishlist {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+
+
+
+
+
+	
 		</style>
 		
 	<div class="colorlib-loader"></div>
@@ -244,42 +266,52 @@
                   	<div class="row">
 						<div class="col-sm-12 text-center"> 
 							<!-- Add to Cart Button -->
-<p class="addtocart" id="addToCartContainer">
-    <a class="btn btn-primary btn-addtocart text-light" onclick="addtoCart()">
-        <i class="icon-shopping-cart"></i> Add to Cart
-    </a>
-</p>
+							<div class="button-container">
+								<a id="addToCartButton" class="btn btn-primary btn-addtocart text-light" onclick="addtoCart()">
+									<i class="icon-shopping-cart"></i> Add to Cart
+								</a>
+							  	<% if (typeof existingWishlist === 'undefined' || existingWishlist === null) { %>
 
-<!-- Go to Cart Button -->
-<p class="addtocart" id="goToCartContainer" style="display: none;">
-    <a href="/cart" class="btn btn-primary btn-addtocart text-light" style="background-color: rgb(66, 66, 66);">
-        <i class="fa-solid fa-cart-shopping"></i> GO TO CART
-    </a>
-</p>
+								<input type="text" id="wishlist_id" hidden value="<%=singleProduct._id%>">
 
-<% if(singleProduct.in_stock==0){%>
-   
-	<div class="stock-alert text-danger">
-		<i class="fas fa-exclamation-triangle stock-alert-icon"></i>
-        <strong>OUT OF STOCK!!</strong>
-        <!-- <p class="mb-0">We apologize for the inconvenience</p> -->
-    </div>
+								<a class="btn btn-primary btn-wishList text-light" id="wishListBTN" onclick="addtoWishlist()">
+									<i class="fa-regular fa-heart" style="color: #ffffff;"></i> Wishlist
+								</a>
+							<% } else { %>
+								<a class="btn btn-primary btn-wishList text-light">
+									<i class="fa-regular fa-heart" style="color: #ffffff;"></i> Added
+								</a>
+							<% } %>
+							
 
-
-<%}else if(singleProduct.in_stock <= 5) { %>
-    <div class="stock-alert text-danger">
-        <i class="fas fa-exclamation-circle stock-alert-icon"></i>
-        <strong>Hurry up!!</strong>
-        <p class="mb-0">Only <%= singleProduct.in_stock %> left in stock!</p>
-    </div>
-<% } else if (singleProduct.in_stock <= 10) { %>
-    <div class="stock-alert text-danger">
-        <i class="fas fa-exclamation-circle stock-alert-icon"></i>
-        <strong>Hurry up!!</strong>
-        <p class="mb-0">Limited stock left!</p>
-    </div>
-<% } %>
-
+								
+								
+							</div>
+							<!-- Go to Cart Button -->
+							<p class="addtocart" id="goToCartContainer" style="display: none;">
+								<a href="/cart" class="btn btn-primary btn-addtocart text-light" style="background-color: rgb(66, 66, 66);">
+									<i class="fa-solid fa-cart-shopping"></i> GO TO CART
+								</a>
+							</p>
+							<!-- Stock Alerts -->
+							<% if (singleProduct.in_stock == 0) { %>
+								<div class="stock-alert text-danger">
+									<i class="fas fa-exclamation-triangle stock-alert-icon"></i>
+									<strong>OUT OF STOCK!!</strong>
+								</div>
+							<% } else if (singleProduct.in_stock <= 5) { %>
+								<div class="stock-alert text-danger">
+									<i class="fas fa-exclamation-circle stock-alert-icon"></i>
+									<strong>Hurry up!!</strong>
+									<p class="mb-0">Only <%= singleProduct.in_stock %> left in stock!</p>
+								</div>
+							<% } else if (singleProduct.in_stock <= 10) { %>
+								<div class="stock-alert text-danger">
+									<i class="fas fa-exclamation-circle stock-alert-icon"></i>
+									<strong>Hurry up!!</strong>
+									<p class="mb-0">Limited stock left!</p>
+								</div>
+							<% } %>
 							
 							</div>
 						</div>
@@ -601,70 +633,110 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 
 		
+
+
+		function addtoWishlist() {
+    const productId = document.getElementById('wishlist_id').value;
+    const button = document.getElementById('wishListBTN');
+
+    if (!productId) {
+        alert('Product ID is missing');
+        return;
+    }
+
+    // Disable the button to prevent multiple clicks
+    button.innerHTML = '<i class="fa-regular fa-heart"></i> Added';
+    button.style.pointerEvents = 'none';
+
+    fetch('/addtowishlist', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId: productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Optionally update the UI or provide feedback to the user
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Re-enable the button if there's an error
+        button.innerHTML = '<i class="fa-regular fa-heart" style="color: #ffffff;"></i> Wishlist';
+        button.style.pointerEvents = 'auto';
+    });
+}
+
+
+
+
+
 		
-  function addtoCart() {
-	const stock = <%=singleProduct.in_stock%>;
-  if(stock== 0){
-	const Toast = Swal.mixin({
-  toast: true,
-  position: 'bottom',
-  showConfirmButton: false,
-  timer: 7000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener('mouseenter', Swal.stopTimer)
-    toast.addEventListener('mouseleave', Swal.resumeTimer)
-  },
-  background: '#dc3545',
-  color: 'white'
-})
+function addtoCart() {
+    const stock = <%=singleProduct.in_stock %>;
+    
+    if (stock === 0) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'bottom',
+            showConfirmButton: false,
+            timer: 7000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+            background: '#dc3545',
+            color: 'white'
+        });
 
-Toast.fire({
-  icon: 'error',
-  title: 'Product out of stock',
-  text: 'We apologize for the inconvenience.'
-})
-	
-	return
-  }
+        Toast.fire({
+            icon: 'error',
+            title: 'Product out of stock',
+            text: 'We apologize for the inconvenience.'
+        });
 
+        return;
+    }
 
     const quantity = document.getElementById('quantity').value;
     const productId = document.getElementById('hiddenProductId').value;
-    
-    
-   
-    const Toast = Swal.mixin({
-  toast: true,
-  position: 'bottom',
-  showConfirmButton: false,
-  timer: 1500,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener('mouseenter', Swal.stopTimer)
-    toast.addEventListener('mouseleave', Swal.resumeTimer)
-  }
-})
+    const price = document.getElementById('priceInput').value;
 
-Toast.fire({
-  icon: 'success',
-  title: 'successfully item add to cart'
-})
- const price=document.getElementById('priceInput').value
- window.location.href = `/addtocart?productId=${productId}&quantity=${quantity}&price=${quantity * price}`;
-
-	document.getElementById('addToCartContainer').style.display = 'none';
+    // Update UI before redirect
+    document.getElementById('addToCartButton').style.display = 'none';
     document.getElementById('goToCartContainer').style.display = 'block';
-  }
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
 
-  window.onload = function() {
+    Toast.fire({
+        icon: 'success',
+        title: 'Successfully added item to cart'
+    });
+
+    // Redirect after UI update
+    window.location.href = `/addtocart?productId=${productId}&quantity=${quantity}&price=${quantity * price}`;
+}
+
+window.onload = function() {
     const isCartExist = '<%= isCartexist %>';
     if (isCartExist === '1') {
-      document.getElementById('addToCartContainer').style.display = 'none';
-      document.getElementById('goToCartContainer').style.display = 'block';
+        document.getElementById('addToCartButton').style.display = 'none';
+        document.getElementById('goToCartContainer').style.display = 'block';
     }
-  };
+};
+
 
 
 

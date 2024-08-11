@@ -665,7 +665,7 @@ const hideCoupon = async (req, res) => {
 
 const updateCoupon=async(req,res)=>{
   try {
-    log('helloiujghyuifiiiiiifififififififififififififififif')
+  
     const{edit_id,Edit_couponCode,Edit_discount,Edit_expiryDate,Edit_minPurchaseAmount,Edit_description}=req.body
    
      

@@ -25,7 +25,7 @@ const cart = new mongoose.Schema({
             type:String,
             default:''
          },
-        finalPrice:{
+        finalPrice:{ 
           type:Number,
           required:true
         }

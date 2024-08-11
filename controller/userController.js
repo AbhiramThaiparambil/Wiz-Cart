@@ -1,4 +1,7 @@
 const { log, error, Console } = require("console");
+const object_id = require('mongoose').Types.ObjectId;
+const WishList = require('../model/wishlistModel'); // Update the path to your WishList model
+
 const User = require("../model/userModer");
 const Product = require("../model/productModel");
 const Cart = require("../model/cartModel");
@@ -11,8 +14,12 @@ const mongoose = require("mongoose");
 const Order = require("../model/orders.model");
 const Category = require("../model/categoryModel");
 const Coupons=require('../model/couponModel')
-
+const wishlist=require('../model/wishlistModel');
+const wishlistModel = require("../model/wishlistModel");
 require("dotenv").config();
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+const Wallet=require('../model/walletModel')
+
 // const { privateDecrypt } = require("crypto");
 // const session=require('express-session')
 
@@ -461,6 +468,11 @@ const otpData = async (req, res) => {
 const singleProduct = async (req, res) => {
   try {
     const singleId = req.params.id;
+   
+    const existingWishlist = await WishList.findOne({ user_id: req.session.user_id, productId: singleId });
+  
+ 
+
     console.log(singleId);
     const singleProduct = await Product.findOne({ _id: singleId });
     console.log(singleProduct.product_name);
@@ -479,7 +491,7 @@ const singleProduct = async (req, res) => {
 
     res.render("user/singleProduct", {
       singleProduct: singleProduct,
-      isCartexist,
+      isCartexist,existingWishlist,
     });
   } catch (error) {
     console.log(error.message);
@@ -973,11 +985,15 @@ const addressDelete = async (req, res) => {
 
 const addTocart = async (req, res) => {
   try {
+    const { productId, quantity } = req.query;
+    
+   
+
     if (!req.session.user_id) {
       return res.redirect("/login");
     }
 
-    const { productId, quantity } = req.query;
+  
     const product = {
       productId: new mongoose.Types.ObjectId(productId),
       quantity: parseInt(quantity),
@@ -1211,6 +1227,11 @@ const removeItem = async (req, res) => {
 
 const checkOut = async (req, res) => {
   try {
+      
+    const wallet1 = await Wallet.findOne({ user_id: new object_id(req.session.user_id) });
+ 
+    
+    
     const user = await User.findOne({ _id: req.session.user_id });
 
     const result = await Cart.aggregate([
@@ -1272,7 +1293,7 @@ const checkOut = async (req, res) => {
           totalAmount: { $sum: "$totalPrice" },
           discount: { $first: "$discount" },
           finalPrice: { $first: "$finalPrice" },
-          couponDetails: { $first: "$couponDetails" },
+          couponDetails: { $first: "$coupon" },
         },
       },
       {
@@ -1282,13 +1303,31 @@ const checkOut = async (req, res) => {
           totalAmount: 1,
           discount: 1,
           finalPrice: 1,
-          couponDetails: 1,
+          coupon: 1,
         },
       },
     ]);
 
     if (result.length > 0) {
-      console.log('Coupon Details:', result[0].couponDetails);
+
+      const cart = await Cart.findOne({ user_id: req.session.user_id });
+    
+      if (!cart) {
+          throw new Error('Cart not found');
+      }
+  
+      const coupon = await Coupons.findOne({ Coupon_Code: cart.coupon });
+      
+ 
+  
+
+
+
+      
+       
+
+
+      
 
       console.log(result[0]);
       res.render("user/checkout", {
@@ -1298,6 +1337,9 @@ const checkOut = async (req, res) => {
         finalPrice: result[0].finalPrice,
         couponDetails: result[0].couponDetails, // Include coupon details in the template
         user,
+         key: RAZORPAY_ID_KEY ,
+         coupon,
+         wallet:wallet1
       });
     } else {
       res.render("user/checkout", { cartItems: [], totalAmount: 0, discount: 0, couponDetails: {} });
@@ -1392,103 +1434,6 @@ const orderSuccess = async (req, res) => {
 //       res.status(500).send('Server Error');
 //   }
 // }
-const createOrder = async (req, res) => {
-  try {
-    const { orderAddress, PaymentMethod } = req.body;
-
-    const userId = req.session.user_id; // Assuming user ID is stored in session
-
-    if (!userId) {
-      return res
-        .status(401)
-        .json({ success: false, message: "User not authenticated" });
-    }
-
-    // Find user data
-    const userData = await User.findById(userId);
-    if (!userData) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
-    // Find cart for the user
-    const cartProduct = await Cart.findOne({ user_id: userId });
-
-    if (!cartProduct || cartProduct.Product.length === 0) {
-      return res.status(400).json({ success: false, message: "Cart is empty" });
-    }
-
-    // Fetch products and calculate totalPrice for each item
-    let totalPrice = 0;
-    const orderProducts = await Promise.all(
-      cartProduct.Product.map(async (item) => {
-        const singleProduct = await Product.findById(item.productId);
-        if (!singleProduct) {
-          throw new Error(`Product with ID ${item.productId} not found`);
-        }
-        console.log(`Found product: ${singleProduct.name}, Price: ${singleProduct.price}`);
-        const productPrice = item.quantity * singleProduct.price;
-        totalPrice += productPrice; // Add to total price
-        return {
-          productId: item.productId,
-          quantity: item.quantity,
-          status: "pending", // Default status for each product
-          price: singleProduct.price, // Include price from the product collection
-          productPrice: productPrice, // Calculate total price for this product
-        };
-      })
-    );
-
-    console.log("Order products with total prices:", orderProducts);
-    console.log("Total price of all products:", totalPrice);
-
-    const discount = 0; // You can calculate discount here if needed
-    const finalPrice = totalPrice - discount;
-
-    // Create new order
-    const order = new Order({
-      user_id: userId,
-      name: userData.name,
-      email: userData.email,
-      status: "pending", 
-      shipment_address: orderAddress,
-      product: orderProducts,
-      paymentMethod: PaymentMethod,
-      totalPrice: cartProduct.totalPrice,
-      discount: cartProduct.discount,
-      finalPrice: cartProduct.finalPrice,
-      coupon:cartProduct.coupon
-    });
-
-    const savedOrder = await order.save();
-    console.log("Order saved successfully:", savedOrder);
-
-    // Update product stock
-    for (const item of cartProduct.Product) {
-      const product = await Product.findById(item.productId);
-      if (product) {
-        product.in_stock -= item.quantity;
-        await product.save();
-      } else {
-        console.log(`Product not found: ${item.productId}`);
-      }
-    }
-
-    // Clear the cart
-    await Cart.deleteOne({ user_id: userId });
-
-    res.status(201).json({
-      success: true,
-      message: "Order created successfully",
-      order: savedOrder,
-    });
-  } catch (error) {
-    console.error("Error creating order:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
 
 
 const getOrderHistory = async (req, res) => {
@@ -1517,21 +1462,18 @@ const getOrderHistory = async (req, res) => {
           as: "newone",
         },
       },
-      // Add this stage to sort orders by orderDate in descending order
+      // Sort orders by orderDate in descending order
       { $sort: { orderDate: -1 } },
     ]);
 
-           
-           
-    console.log(orders);
-    
-    
+    const orderPayment = await Order.find({ email: user.email }).sort({ orderDate: -1 });
+
     if (orders.length === 0) {
       console.log("No orders found for user:", userId);
     }
 
     let toast = req.flash("info");
-    res.render("user/myOrders", { orders, toast });
+    res.render("user/myOrders", { orders, toast, orderPayment });
   } catch (error) {
     console.error("Error in getOrderHistory:", error);
     res.status(500).render("error", {
@@ -1540,11 +1482,124 @@ const getOrderHistory = async (req, res) => {
   }
 };
 
+
+
+
 const cancellProductStatus = async (req, res) => {
   try {
-    const { object_id, product_id } = req.body;
+    console.log("____________________________________________________________________cancell______________________________________________________");
 
-    console.log("hello");
+    const { object_id, product_id, product_name } = req.body;
+    let product_price;
+
+    // Find the order by its ID
+    const order = await Order.findOne({ _id: object_id });
+
+    if (!order) {
+      return res.status(404).json({ status: 'error', message: "Order not found" });
+    }
+
+    const productIndex = order.product.findIndex(
+      (p) => p._id.toString() === product_id
+    );
+
+    if (productIndex === -1) {
+      return res.status(404).json({ status: 'error', message: "Product not found in the order" });
+    }
+
+    const quantity = order.product[productIndex].quantity;
+    product_price = order.product[productIndex].productPrice;
+    order.product[productIndex].status = "cancelled";
+
+    if (order.paymentMethod === 'COD') {
+      order.product[productIndex].refund = "no refund";
+    } else {
+      order.product[productIndex].refund = "completed";
+    }
+
+    const product = await Product.findOne({
+      _id: order.product[productIndex].productId,
+    });
+
+    if (!product) {
+      return res.status(404).json({ status: 'error', message: "Product not found" });
+    }
+
+    product.in_stock += quantity;
+
+    await order.save();
+    await product.save();
+
+    if (order.paymentMethod === 'COD') {
+      return res.redirect('/getOrderHistory');
+    } else {
+      // Check if the wallet exists
+      const walletIsexist = await Wallet.findOne({ user_id: new mongoose.Types.ObjectId(req.session.user_id) });
+
+      if (!walletIsexist) {
+        // Create a new wallet if it doesn't exist
+        const addToWallet = new Wallet({
+          user_id: new mongoose.Types.ObjectId(req.session.user_id),
+          balance: product_price,
+          transactions: [{
+            amount: product_price,
+            type: order.paymentMethod,
+            description: product_name + ' amount credited'
+          }]
+        });
+
+        const status = await addToWallet.save();
+        if (status) {
+          return res.redirect('/getOrderHistory');
+        }
+      } else {
+        // Update existing wallet
+        const updatedBalance = walletIsexist.balance + product_price;
+        const walletUpdate = await Wallet.updateOne(
+          { user_id: new mongoose.Types.ObjectId(req.session.user_id) },
+          {
+            $set: { balance: updatedBalance },
+            $push: {
+              transactions: {
+                amount: product_price,
+                type: order.paymentMethod,
+                description: product_name + ' amount credited'
+              }
+            }
+          }
+        );
+
+        if (walletUpdate.modifiedCount > 0) {
+          return res.redirect('/getOrderHistory');
+        } else {
+          return res.status(500).json({ status: 'error', message: "Failed to update wallet" });
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error updating product status:", error);
+    res.status(500).json({ status: 'error', message: "Internal server error" });
+  }
+};
+
+
+
+
+
+const orderReturn = async (req, res) => {
+  try {
+    console.log("____________________________________________________________________ORDER RETURN______________________________________________________");
+    
+    const { object_id, product_id, product_price, product_name } = req.body;
+
+    console.log(object_id, product_id, product_price, product_name);
+
+    // Validate product_price
+    const price = parseFloat(product_price);
+    if (isNaN(price)) {
+      return res.status(400).json({ message: "Invalid product price" });
+    }
+
     // Find the order by its ID
     const order = await Order.findOne({ _id: object_id });
 
@@ -1557,14 +1612,12 @@ const cancellProductStatus = async (req, res) => {
     );
 
     if (productIndex === -1) {
-      return res
-        .status(404)
-        .json({ message: "Product not found in the order" });
+      return res.status(404).json({ message: "Product not found in the order" });
     }
 
     const quantity = order.product[productIndex].quantity;
 
-    order.product[productIndex].status = "cancelled";
+    order.product[productIndex].status = "return";
 
     const product = await Product.findOne({
       _id: order.product[productIndex].productId,
@@ -1576,24 +1629,75 @@ const cancellProductStatus = async (req, res) => {
 
     product.in_stock += quantity;
 
+    // Save the updated order and product
     await order.save();
     await product.save();
 
-    req.flash("info", "order cancelled successfully");
-    res.redirect("/getOrderHistory");
+    // Handle wallet logic
+    const wallet = await Wallet.findOne({ user_id: new mongoose.Types.ObjectId(req.session.user_id) });
+
+    if (!wallet) {
+      // Create a new wallet if it doesn't exist
+      const addToWallet = new Wallet({
+        user_id: new mongoose.Types.ObjectId(req.session.user_id),
+        balance: price,
+        transactions: [{
+          amount: price,
+          type: order.paymentMethod,
+          description: `${product_name || 'Product'} amount credited`
+        }]
+      });
+
+      const status = await addToWallet.save();
+      if (status) {
+        req.flash("info", "Order returned and wallet credited successfully");
+        return res.redirect('/getOrderHistory');
+      }
+    } else {
+      // Update existing wallet
+      const updatedBalance = wallet.balance + price;
+      const walletUpdate = await Wallet.updateOne(
+        { user_id: new mongoose.Types.ObjectId(req.session.user_id) },
+        {
+          $set: { balance: updatedBalance },
+          $push: {
+            transactions: {
+              amount: price,
+              type: order.paymentMethod,
+              description: `${product_name || 'Product'} amount credited`
+            }
+          }
+        }
+      );
+
+      if (walletUpdate.modifiedCount > 0) {
+        req.flash("info", "Order returned and wallet credited successfully");
+        return res.redirect('/getOrderHistory');
+      }
+    }
+
   } catch (error) {
     console.error("Error updating product status:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+ 
+
+
+
+
+
+
+
+
 
 
 
 const Coupon = async (req, res) => {
   try {
+    
     const couponCode = req.body.coupon;
-    console.log(couponCode);
-
+ 
     const couponIsexist = await Coupons.findOne({ Coupon_Code: couponCode });
     console.log(couponIsexist);
 
@@ -1606,7 +1710,42 @@ const Coupon = async (req, res) => {
         return res.status(500).json({ message: 'Coupon has expired' });
       }
 
+
+     
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      const applyCoupon = await Cart.findOneAndUpdate(
+        { user_id: req.session.user_id },  // Filter to find the document
+        { 
+          $set: { 
+            coupon: couponIsexist.Coupon_Code, 
+            discount: couponIsexist.discount_Price 
+          } 
+        },
+        { new: true }  // Return the updated document
+      );
+            
       res.status(200).json({ Coupon: couponIsexist });
+        
+
     } else {
       res.status(500).json({ message: 'Coupon not found' });
     }
@@ -1620,10 +1759,15 @@ const Coupon = async (req, res) => {
 
 const applyCoupon = async (req, res) => {
   try {
-    console.log('-------------------------------------------------------------------------------------------------------------------------------------------------------------------');
+
     
       const coupon = req.body.couponCode;
-      console.log(coupon);
+      console.log('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
+
+  console.log(coupon.Coupon_Code);
+  console.log('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
+  
+  
 
       const cart = await Cart.findOne({ user_id: new mongoose.Types.ObjectId(req.session.user_id) });
 
@@ -1638,7 +1782,7 @@ const applyCoupon = async (req, res) => {
 
       const update = await Cart.updateOne(
           { user_id: new mongoose.Types.ObjectId(req.session.user_id) },
-          { $set: { discount: discountPrice, finalPrice: final ,couponDetails:coupon} }
+          { $set: { discount: discountPrice, finalPrice: final ,coupon:coupon.Coupon_Code} }
       );
       console.log(update);
       
@@ -1648,6 +1792,7 @@ const applyCoupon = async (req, res) => {
       }
 
       res.status(200)
+
   } catch (error) {
       console.error('Error applying coupon:', error);
       res.status(500).json({ message: 'An error occurred while applying the coupon' });
@@ -1691,6 +1836,137 @@ const removeCoupon = async (req, res) => {
 };
 
 
+const addToWishlist = async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const userId = req.session.user_id;
+
+
+
+        // Check if the product is already in the wishlist
+        const existingItem = await WishList.findOne({ user_id: userId, productId: productId });
+
+        if (existingItem) {
+            return res.status(400).json({ message: "Product is already in your wishlist" });
+        }
+
+        // Create a new wishlist entry
+        const newWishlistItem = new WishList({
+            user_id: userId,
+            productId: productId
+        });
+
+        await newWishlistItem.save();
+
+        return res.status(200).json({ message: "Product added to wishlist successfully" });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "An error occurred while adding the product to your wishlist" });
+    }
+};
+
+
+
+const getWishlist = async (req, res) => {
+  try {
+      const userId = req.session.user_id;
+
+      if (!userId) {
+          return res.redirect('/login'); // Redirect to login if user is not authenticated
+      }
+
+      // Aggregate wishlist items with product details
+      const wishlistItems = await WishList.aggregate([
+          {
+              $match: { user_id: new mongoose.Types.ObjectId(userId) }
+          },
+          {
+              $lookup: {
+                  from: 'products', // Make sure this matches your MongoDB collection name
+                  localField: 'productId',
+                  foreignField: '_id',
+                  as: 'productDetails'
+              }
+          },
+          {
+              $unwind: '$productDetails'
+          },
+          {
+              $project: {
+                  _id: 0,
+                  in_stock: '$productDetails.in_stock',
+                  productId: '$productDetails._id',
+                  name: '$productDetails.product_name',
+                  description: '$productDetails.product_description',
+                  price: '$productDetails.price',
+                  images: '$productDetails.product_img'
+              }
+          }
+      ]);
+
+      // Log the first item for debugging
+      console.log(wishlistItems[0]);
+
+      // Render the wishlist view with the aggregated wishlist items
+      res.render('user/wishlist', { wishlistItems });
+
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).render('user/wishlist', { wishlistItems: [] }); // Render with an empty array in case of an error
+  }
+};
+
+
+const getWallet = async (req, res) => {
+  try {
+      // Fetch the wallet for the logged-in user
+      const wallet = await Wallet.findOne({ user_id: new object_id(req.session.user_id) });
+      // If wallet is not found, return an error message or redirect
+      if (!wallet) {
+          return res.status(404).json({ message: 'Wallet not found' });
+      }
+      const user = await User.findOne({ _id: req.session.user_id });
+
+      // Render the wallet page with the wallet data
+      res.render('user/wallet', {
+          balance: wallet.balance,
+          transactions: wallet.transactions,user
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+const removeWishlist = async (req, res) => {
+  try {
+      const productId = req.params.id;
+      const userId = req.session.user_id;
+
+      console.log('Session data:', req.session); // Log the entire session object
+      console.log('Removing product from wishlist:', productId);
+      console.log('For user:', userId);
+
+      // Use the 'new' keyword to create ObjectId instances
+      const result = await WishList.findOneAndDelete({
+          user_id: new mongoose.Types.ObjectId(userId), 
+          productId: new mongoose.Types.ObjectId(productId)
+      });
+
+      if (result) {
+          res.json({ success: true });
+      } else {
+          res.status(400).json({ success: false, message: 'Product not found in wishlist' });
+      }
+  } catch (error) {
+      console.error('Failed to remove item from wishlist:', error);
+      res.status(500).json({ success: false, message: 'Failed to remove item from wishlist' });
+  }
+};
+
+
+
 
 
 
@@ -1726,12 +2002,16 @@ module.exports = {
   quantityUpdate,
   removeItem,
   checkOut,
-  createOrder,
+  orderReturn,
   orderSuccess,
   getOrderHistory,
   cancellProductStatus,
   Coupon ,
   applyCoupon,
  removeCoupon,
+ addToWishlist,
+ getWishlist,
+ removeWishlist,
+ getWallet,
   // getOrderHistory
 };

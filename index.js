@@ -12,6 +12,8 @@ const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
 const productAddRoute = require("./controller/productAdding");
 const methodOverride = require("method-override");
+const cors = require('cors');
+
 require('dotenv').config()
 
 const port = process.env.port
@@ -28,6 +30,8 @@ const googleAuth = require("./auth/google");
 
 app.use(cookieParser("keyboard cat"));
 app.use(flash());
+app.use(cors());
+
 
 app.use(
   session({

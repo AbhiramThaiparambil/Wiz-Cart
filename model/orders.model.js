@@ -16,7 +16,7 @@ const OrderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'success', 'failed'],
+    enum: ['pending', 'success', 'failed' ,'return'],
     default: 'pending'
   },
   shipment_address: {
@@ -73,27 +73,38 @@ const OrderSchema = new mongoose.Schema({
     },
     productPrice:{
        type:Number,
-       required:true
+      
     },
     status: {
       type: String,
-      enum: ['pending', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'shipped', 'delivered', 'cancelled',"return"],
       default: 'pending'
-    }
+    },
+    refund: {
+      type: String,
+      
+    },
+
   }],
   orderDate: {
     type: Date,
     default: Date.now
   },
+  paymentSource:{
+    type: String,
+  },
   paymentMethod: {
     type: String,
-    enum: ['Credit Card', 'Debit Card', 'COD', 'Bank Transfer'],
     required: true
   },
-  totalPrice:{
-  type:Number,
-  required:true
-},
+  payment:{
+    type:String
+   },
+   totalPrice: {
+    type: Number,
+   
+  },
+  
   discount:{
     type:Object,
   },
@@ -103,8 +114,8 @@ const OrderSchema = new mongoose.Schema({
   },
   finalPrice:{
     type:Number,
-    required:true
-  }
+    
+  },
 
 
 
