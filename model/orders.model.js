@@ -71,6 +71,10 @@ const OrderSchema = new mongoose.Schema({
       type: Number,
       required: true
     },
+    productPrice:{
+       type:Number,
+       required:true
+    },
     status: {
       type: String,
       enum: ['pending', 'shipped', 'delivered', 'cancelled'],
@@ -85,7 +89,25 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     enum: ['Credit Card', 'Debit Card', 'COD', 'Bank Transfer'],
     required: true
+  },
+  totalPrice:{
+  type:Number,
+  required:true
+},
+  discount:{
+    type:Object,
+  },
+  coupon:{
+     type:String,
+     default:''
+  },
+  finalPrice:{
+    type:Number,
+    required:true
   }
+
+
+
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

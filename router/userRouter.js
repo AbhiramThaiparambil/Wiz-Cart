@@ -74,6 +74,10 @@ userRoute.post("/ordercancellation",isLogin,userController.cancellProductStatus)
 userRoute.get("/getOrderHistory",isLogin,userController.getOrderHistory);
 userRoute.put("/quantityUpdate",isLogin,userController.quantityUpdate);
 userRoute.delete("/removeItem/id:id",isLogin,userController.removeItem);
+//coupon
+userRoute.post('/coupon',userController.Coupon )
+userRoute.post('/applyCoupon',userController.applyCoupon)
+userRoute.delete('/removeCoupon',userController.removeCoupon)
 
 module.exports = {
   userRoute,

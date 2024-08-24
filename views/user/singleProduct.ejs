@@ -186,6 +186,7 @@
 							<h3></h3>
 							<p class="price">
 								<span> ₹<%=singleProduct.price%></span> 
+								<input type="text" id="priceInput" hidden value="<%=singleProduct.price%>">
 								<span class="rate">
 									<i class="icon-star-full"></i>
 									<i class="icon-star-full"></i>
@@ -649,8 +650,8 @@ Toast.fire({
   icon: 'success',
   title: 'successfully item add to cart'
 })
-
-window.location.href = `/addtocart?productId=${productId}&quantity=${quantity}`;
+ const price=document.getElementById('priceInput').value
+ window.location.href = `/addtocart?productId=${productId}&quantity=${quantity}&price=${quantity * price}`;
 
 	document.getElementById('addToCartContainer').style.display = 'none';
     document.getElementById('goToCartContainer').style.display = 'block';

@@ -45,6 +45,15 @@ adminRoute.get('/logout',adminController.logout)
 adminRoute.get("/orderMangement",adminController.orderMangement)
 adminRoute.post("/update-status",adminController.updateStatus)
 
+
+// COUPON MANGEMENT 
+
+adminRoute.get('/couponMangement',adminController.couponMangemnt)
+adminRoute.post('/createCoupon',adminController.createCoupon)
+adminRoute.delete('/delete-coupon',adminController.deleteCoupon)
+adminRoute.patch('/show-coupon',adminController.unhideCoupon)
+adminRoute.patch('/hide-coupon',adminController.hideCoupon)
+adminRoute.post('/updateCoupon',adminController.updateCoupon)
 module.exports = {
   adminRoute,
 };

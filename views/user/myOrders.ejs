@@ -1,6 +1,47 @@
 <%- include('../layout/header') %>
 
 <link rel="stylesheet" href="css/mystyle.css">
+<style>
+  .order-card {
+  background-color:#88c8bc8e;
+  border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid#749690; /* Debugging border */
+}
+
+.product-cart {
+  background-color: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+
+
+.btn-custom {
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 15px;
+}
+
+
+
+</style>
 
 <div class="colorlib-loader"></div>
 
@@ -130,137 +171,116 @@
   </div>
 
   <div class="container">
-  <div class="row row-pb-lg">
-    <div class="col-md-12">
-      <div class="product-name d-flex">
-        <div class="one-forth text-left px-4">
-          <span>Product Details</span>
-        </div>
-        <div class="one-eight text-center" style="margin-right: 25px;">
-          <span>Price</span>
-        </div>
-        <div class="one-eight text-center" style="margin-right: 270px;">
-          <span>Quantity</span>
-        </div>
-        <div class="one-eight text-center" style="margin-right: 300px;" >
-          <span>ORDER&nbsp&nbspSTATUS</span>
-        </div>
-        
-      </div>
-  
-      <% if (orders.length === 0) { %>
-        <div class="alert alert-info">No orders found.</div>
-      <% } else { %>
-        <% orders.forEach(order => { %>
-          <% order.product.forEach((productItem, index) => { %>
-            <% if (order.newone[index]) { %> <!-- Check if order.newone[index] exists -->
-              <div class="product-cart d-flex mb-3 p-3 border rounded">
-                <!-- Product Image -->
-                <% if (order.newone[index].product_img) { %> <!-- Check if product_img exists -->
-                  <div class="product-img" style="background-image: url(<%=order.newone[index].product_img[1]%>); background-size: cover; width: 150px; height: 150px; border-radius: 8px;">
-                    <img src="<%= order.newone[index].product_img[0] %>" alt="<%= order.newone[index].product_name %>" class="img-fluid" style="border-radius: 8px;">
-                  </div>
-                <% } else { %>
-                  <div class="product-img" style="background-color: #ddd; width: 150px; height: 150px; border-radius: 8px;">
-                    <p class="text-center" style="padding-top: 50px;">No Image Available</p>
-                  </div>
-                <% } %>
-        
-                <!-- Product Name -->
-                <div class="one-forth">
-                  <div class="display-tc" style="font-size: 18px; padding-left: 20px;">
-                    <span><%= order.newone[index].product_name || 'Product Name Not Available' %></span>
-                  </div>
-                </div>
-        
-                <!-- Product Price -->
-                <div class="one-eight text-center">
-                  <div class="display-tc" style="font-size: 18px; padding-right: 20px;">
-                    <span class="price">₹<%= order.newone[index].price || 'Price Not Available' %></span>
-                  </div>
-                </div>
-        
-                <!-- Quantity -->
-                <div class="one-eight text-center" style="padding-right: 20px;">
-                  <div class="display-tc">
-                    <input type="text" id="quantity" name="quantity" class="form-control input-number text-center" value="<%= productItem.quantity %>" min="1" max="100" style="width: 80px;">
-                  </div>
-                </div>
-  
-              
-                <% if (productItem.status == 'pending') { %>
-                  <div class="alert alert-warning d-flex flex-column justify-content-between align-items-center" style="width: 100%; font-size: 16px" role="alert">
-                    <div class="d-flex justify-content-between w-100">
-                      <div>
-                        <i class="fa-solid fa-clock" style="color: #655c20;"></i> <strong>Pending:</strong> The product "<%= order.newone[index].product_name %>" has been pending.
-                        <div class="mt-auto text-start">
-                          <button class="btn btn-primary mt-5" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>, quantity: <%= JSON.stringify(productItem.quantity) %> },"pending")'><i class="fas fa-file-invoice"></i> Invoice</button>
+
+    
+    <div class="row row-pb-lg">
+      <div class="col-md-12">
+ 
+    
+        <% if (orders.length === 0) { %>
+          <div class="alert alert-info">No orders found.</div>
+        <% } else { %>
+          <% orders.forEach(order => { %>
+            <div class="order-card mb-5">
+              <div class="order-header">
+                 <br>  
+                <p class="ps-3"><strong>Order Date:</strong> <%= new Date(order.orderDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></p>
+              </div>
+             
+             
+              <div class="order-products">
+                <% order.product.forEach((productItem, index) => { %>
+                  <% if (order.newone[index]) { %>
+                    
+                
+                    <div class="product-cart mb-3">
+                      
+                      <!-- Product Image -->
+                      <div class="product-img" style="width: 120px; height: 120px; overflow: hidden; border-radius: 10px;">
+                        <% if (order.newone[index].product_img) { %>
+                          <img src="<%= order.newone[index].product_img[0] %>" alt="<%= order.newone[index].product_name %>" class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                        <% } else { %>
+                          <div style="width: 120px; height: 120px; background-color: #ddd; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <p class="text-center m-0">No Image</p>
+                          </div>
+                        <% } %>
+                      </div>
+    
+                      <!-- Product Name -->
+                      <div class="one-forth d-flex align-items-center">
+                        <div class="display-tc" style="font-size: 18px; padding-left: 20px;">
+                          <span class="font-weight-bold"><%= order.newone[index].product_name || 'Product Name Not Available' %></span>
                         </div>
                       </div>
-                      <div class="text-center" style="width: 200px; font-size: 16px;">
-                        <div>
-                          <% 
-                            // Format the original date
-                            var orderDate = new Date(order.orderDate);
-                            var formattedDate = orderDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                            
-                            // Calculate the future date
-                            var futureDate = new Date(orderDate);
-                            futureDate.setDate(orderDate.getDate() + 7);
-                            var formattedFutureDate = futureDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                          %>
-                          <p style="font-size: 14px; margin: 0;">Ordered on <br> <span class="font-weight-bold"><%= formattedDate %></span></p>
-                          <hr>
-                          <p style="font-size: 14px; margin: 0;" class="text-success">Expected delivery <br> <span class="font-weight-bold"><%= formattedFutureDate %></span></p>
+    
+                      <!-- Product Price -->
+                      <div class="one-eight d-flex align-items-center justify-content-center">
+                        <div class="display-tc" style="font-size: 18px;">
+                          <span class="price">₹<%= order.newone[index].price || 'N/A' %></span>
                         </div>
                       </div>
-                      <div>
-                        <form action="/ordercancellation" method="post" id="cancellForm" class="d-flex flex-column align-items-center ms-5">
-                          <input type="hidden" name="object_id" value="<%= order._id %>">
-                          <input type="hidden" name="product_id" value="<%= productItem._id %>">
-                          <button type="button" onclick="ConformOderCancell()" class="btn btn-danger mt-3">Cancel</button>
-                        </form>
+    
+                      <!-- Quantity -->
+                      <div class="one-eight d-flex align-items-center justify-content-center">
+                        <div class="display-tc">
+                          <input type="text" id="quantity" name="quantity" class="form-control input-number text-center" value="<%= productItem.quantity %>" min="1" max="100" style="width: 60px;" readonly>
+                        </div>
+                      </div>
+    
+                      <!-- Product Status and Actions -->
+                      <div class="status-actions d-flex flex-column justify-content-center align-items-center" style="width: 250px;">
+                        <% if (productItem.status === 'pending') { %>
+                          <div class="text-center mb-2">
+                            <span class="status-badge bg-warning text-dark">Pending</span>
+                          </div>
+                          <div class="d-flex justify-content-center">
+                            <button class="btn btn-custom btn-primary me-2" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>, quantity: <%= JSON.stringify(productItem.quantity) %> }, "pending")'><i class="fas fa-file-invoice"></i> Invoice</button>
+                            <form action="/ordercancellation" method="post" id="cancellForm">
+                              <input type="hidden" name="object_id" value="<%= order._id %>">
+                              <input type="hidden" name="product_id" value="<%= productItem._id %>">
+                              <button type="button" onclick="ConformOderCancell()" class="btn btn-custom btn-danger">Cancel</button>
+                            </form>
+                          </div>
+                        <% } else if (productItem.status === 'delivered') { %>
+                          <div class="text-center mb-2">
+                            <span class="status-badge bg-success">Delivered</span>
+                          </div>
+                          <button class="btn btn-custom btn-primary" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>, quantity: <%= JSON.stringify(productItem.quantity) %> }, "delivered")'><i class="fas fa-file-invoice"></i> Invoice</button>
+                        <% } else if (productItem.status === 'cancelled') { %>
+                          <div class="text-center mb-2">
+                            <span class="status-badge bg-danger">Cancelled</span>
+                          </div>
+                          <button class="btn btn-custom btn-primary" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>, quantity: <%= JSON.stringify(productItem.quantity) %> }, "cancelled")'><i class="fas fa-file-invoice"></i> Invoice</button>
+                        <% } %>
                       </div>
                     </div>
-                   
-                  </div>
-              
-                
-                  
-                <% }else if(productItem.status == 'delivered'){%>
-                
-                  <div class="alert alert-success  " style="width: 100%; font-size: 16px" role="alert">
-                  <p class="mt-5">  <strong> <i class="fas fa-truck" style="color: #01600c;"></i> delivered:</strong>  the product "<%= order.newone[index].product_name %>"  has been delivere  </p> <br>
-                  <button  class="btn btn-primary" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>,quantity:<%=JSON.stringify(productItem.quantity)%> },"delivered")'><i class="fas fa-file-invoice"></i> invoice</button>
-
-                </div>
-              
-                <% }else if (productItem.status === 'cancelled') { %>
-                  <div class="alert alert-danger " style="width: 100%; font-size: 16px;">
-                   <p class="mt-5"> <i class="fa-solid fa-ban" style="color: #600b0b;"></i> <strong>Cancelled:</strong> The product "<%= order.newone[index].product_name %>" has been cancelled.</p>
-                   <button  class="btn btn-primary" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>,quantity:<%=JSON.stringify(productItem.quantity)%>},"cancelled")'><i class="fas fa-file-invoice"></i> invoice</button>
-
-               
-
-
-
-
-                  
-                  </div>
-                <% } %>
-        
-              
-                
+                  <% } %>
+                <% }) %>
               </div>
-            <% } %>
+              
+              <!-- Order Summary -->
+              <div class="order-summary mt-4 p-4 bg-light rounded">
+                <h5 class="mb-3">Order Summary</h5>
+                <div class="d-flex justify-content-between">
+                  <span>Subtotal:</span>
+                  <span>₹<%= order.totalPrice %></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Discount:</span>
+                  <span>₹<%= order.discount %></span>
+                </div>
+                <div class="d-flex justify-content-between font-weight-bold mt-2">
+                  <span>Total:</span>
+                  <span>₹<%= order.finalPrice %></span>
+                </div>
+              </div>
+            </div>
           <% }) %>
-        <% }) %>
-      <% } %>
-
-  
-
+        <% } %>
+      </div>
     </div>
-  </div>
+    
+    
 
 
       <div class="row row-pb-lg">
