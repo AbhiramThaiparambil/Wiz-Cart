@@ -187,49 +187,65 @@
                   </div>
                 </div>
   
-                <!-- Show Order Dates Only If Not Cancelled -->
+              
                 <% if (productItem.status == 'pending') { %>
-                  <div class="alert alert-warning d-flex justify-content-between align-items-center" style="width: 100%;  font-size: 16px" role="alert">
-                    <div>
-                      <i class="fa-solid fa-clock" style="color: #655c20;"></i> <strong>Pending:</strong> The product "<%= order.newone[index].product_name %>" has been pending.
-                    </div>
-                    <div class="text-center" style="width: 200px; font-size: 16px;">
+                  <div class="alert alert-warning d-flex flex-column justify-content-between align-items-center" style="width: 100%; font-size: 16px" role="alert">
+                    <div class="d-flex justify-content-between w-100">
                       <div>
-                        <% 
-                          // Format the original date
-                          var orderDate = new Date(order.orderDate);
-                          var formattedDate = orderDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                          
-                          // Calculate the future date
-                          var futureDate = new Date(orderDate);
-                          futureDate.setDate(orderDate.getDate() + 7);
-                          var formattedFutureDate = futureDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                        %>
-                        <p style="font-size: 14px; margin: 0;">Ordered on <br> <span class="font-weight-bold"><%= formattedDate %></span></p>
-                        <hr>
-                        
-
-                        <p style="font-size: 14px; margin: 0;" class="text-success">Expected delivery <br> <span class="font-weight-bold"><%= formattedFutureDate %></span></p>
+                        <i class="fa-solid fa-clock" style="color: #655c20;"></i> <strong>Pending:</strong> The product "<%= order.newone[index].product_name %>" has been pending.
+                        <div class="mt-auto text-start">
+                          <button class="btn btn-primary mt-5" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>, quantity: <%= JSON.stringify(productItem.quantity) %> },"pending")'><i class="fas fa-file-invoice"></i> Invoice</button>
+                        </div>
+                      </div>
+                      <div class="text-center" style="width: 200px; font-size: 16px;">
+                        <div>
+                          <% 
+                            // Format the original date
+                            var orderDate = new Date(order.orderDate);
+                            var formattedDate = orderDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                            
+                            // Calculate the future date
+                            var futureDate = new Date(orderDate);
+                            futureDate.setDate(orderDate.getDate() + 7);
+                            var formattedFutureDate = futureDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                          %>
+                          <p style="font-size: 14px; margin: 0;">Ordered on <br> <span class="font-weight-bold"><%= formattedDate %></span></p>
+                          <hr>
+                          <p style="font-size: 14px; margin: 0;" class="text-success">Expected delivery <br> <span class="font-weight-bold"><%= formattedFutureDate %></span></p>
+                        </div>
+                      </div>
+                      <div>
+                        <form action="/ordercancellation" method="post" id="cancellForm" class="d-flex flex-column align-items-center ms-5">
+                          <input type="hidden" name="object_id" value="<%= order._id %>">
+                          <input type="hidden" name="product_id" value="<%= productItem._id %>">
+                          <button type="button" onclick="ConformOderCancell()" class="btn btn-danger mt-3">Cancel</button>
+                        </form>
                       </div>
                     </div>
-                    <div>
-                      <form action="/ordercancellation" method="post" id="cancellForm" class="d-flex flex-column align-items-center ms-5">
-                        <input type="hidden" name="object_id" value="<%= order._id %>">
-                        <input type="hidden" name="product_id" value="<%= productItem._id %>">
-                        <button type="button" onclick="ConformOderCancell()" class="btn btn-danger mt-3">Cancel</button>
-                      </form>
-                    </div>
+                   
                   </div>
+              
+                
+                  
                 <% }else if(productItem.status == 'delivered'){%>
                 
                   <div class="alert alert-success  " style="width: 100%; font-size: 16px" role="alert">
-                  <p class="mt-5">  <strong> <i class="fas fa-truck" style="color: #01600c;"></i> delivered:</strong>  the product "<%= order.newone[index].product_name %>"  has been delivere  </p> <br></div>
-                
-        
+                  <p class="mt-5">  <strong> <i class="fas fa-truck" style="color: #01600c;"></i> delivered:</strong>  the product "<%= order.newone[index].product_name %>"  has been delivere  </p> <br>
+                  <button  class="btn btn-primary" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>,quantity:<%=JSON.stringify(productItem.quantity)%> },"delivered")'><i class="fas fa-file-invoice"></i> invoice</button>
+
+                </div>
               
                 <% }else if (productItem.status === 'cancelled') { %>
                   <div class="alert alert-danger " style="width: 100%; font-size: 16px;">
                    <p class="mt-5"> <i class="fa-solid fa-ban" style="color: #600b0b;"></i> <strong>Cancelled:</strong> The product "<%= order.newone[index].product_name %>" has been cancelled.</p>
+                   <button  class="btn btn-primary" onclick='invoicePage({ invoicData: <%= JSON.stringify(order.newone[index]) %>, order: <%= JSON.stringify(order.shipment_address) %>, iamge: <%= JSON.stringify(order.newone[index].product_img[0]) %>,quantity:<%=JSON.stringify(productItem.quantity)%>},"cancelled")'><i class="fas fa-file-invoice"></i> invoice</button>
+
+               
+
+
+
+
+                  
                   </div>
                 <% } %>
         
@@ -240,6 +256,9 @@
           <% }) %>
         <% }) %>
       <% } %>
+
+  
+
     </div>
   </div>
 
@@ -341,6 +360,161 @@
         </div>
       </footer>
     </div>
+       
+
+
+                          <!-- Full Screen Modal -->
+                          <div class="modal fade" id="fullScreenModal" tabindex="-1" aria-labelledby="fullScreenModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+                                    
+                                  <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                    <h2 class="text-center text-white mb-0 flex-grow-1">Invoice</h2>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                
+                                    <div class="modal-body">
+                                      <div class="container my-5">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card shadow-lg border-0">
+                                                  
+                                                    <div class="card-body">
+                                                        <div class="row mb-4">
+                                                            <div class="col-sm-6">
+                                                                <h5 class="mb-3 text-primary">Order Address</h5>
+                                                                <div class="border p-3 rounded bg-light">
+                                                                    <p class="mb-1"><strong id="invoiceName"></strong></p>
+                                                                    <p class="mb-1" id="addressName"></p>
+                                                                    <p class="mb-1" id="addressMobile"></p>
+                                                                    <p class="mb-1" id="addressPincode"></p>
+                                                                    <p class="mb-1" id="addressLocality"></p>
+                                                                    <p class="mb-1" id="addressAddress"></p>
+                                                                    <p class="mb-1" id="addressCity"></p>
+                                                                    <p class="mb-1" id="addressState"></p>
+                                                                    <p class="mb-1" id="addressLandmark"></p>
+                                                                    <p class="mb-1" id="addressAltmobile"></p>
+                                                                    <p class="mb-0" id="addressAddresstype"></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 text-sm-end mt-5">
+                                                              <!-- <div class="table-responsive">
+                                                                <table class="table table-hover">
+                                                                    <thead class="table-light">
+                                                                        <tr>
+                                                                            <th>Photo</th>
+                                                                            <th>Name</th>                                       
+                                                                            <th class="text-end">Quantity</th>
+                                                                            <th class="text-end">Price</th>
+                                                                            <th class="text-end">Total</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td><img src="placeholder.jpg" alt="Product 1" class="img-thumbnail" style="width: 50px;"></td>
+                                                                            <td>Description for Item 1</td>
+                                                                            <td class="text-end">1</td>
+                                                                            <td class="text-end">$100.00</td>
+                                                                            <td class="text-end">$100.00</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><img src="placeholder.jpg" alt="Product 2" class="img-thumbnail" style="width: 50px;"></td>
+                                                                            <td>Description for Item 2</td>
+                                                                            <td class="text-end">2</td>
+                                                                            <td class="text-end">$75.00</td>
+                                                                            <td class="text-end">$150.00</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div> -->
+
+
+                                                            <div class="col-md-12 col-lg-12">
+                                                              <div class="card shadow-sm">
+                                                                  <div class="card-body">
+                                                                      <div class="d-flex align-items-start">
+                                                                          <img  alt="Product Image" class="img-thumbnail me-3" id="oderImg" style="width: 100px; height: 100px; object-fit: cover;">
+                                                                          <div>
+                                                                              <h5 class="card-title mb-1" id="productName"></h5>
+                                                                             
+                                                                              <p class="card-text product-price mb-1" id="price">595 + 40</p>
+
+                                                                              <p class="card-text text-success mb-0" id="InvoiceQuantity"></p>
+
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+
+
+                                                                  <div class="col-lg-12 col-sm-12 ms-auto">
+                                                                <table class="table table-sm">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="text-start"><strong>Subtotal</strong></td>
+                                                                            <td class="text-end" id="InvoiceTotal"></td>
+                                                                        </tr>
+                                                                      
+                                                                        <tr class="bg-success text-white">
+                                                                            <td class="text-start"><strong>Total</strong></td>
+                                                                            <td class="text-end"><strong id="InvoiceLastTotol"></strong></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                          
+
+                                                             
+                                                            <div id="cancelDIV" class="alert alert-danger" role="alert" style="width: 100%; max-width: 400px; margin: 0px auto;  box-sizing: border-box; display: none;">
+                                                              <p><strong><i class="fa-solid fa-ban" style="color: #600b0b;"></i> Cancelled:</strong> This product has been cancelled.</p>
+                                                            </div>
+                                                            
+                                                            <div id="delivereDIV" class="alert alert-success" role="alert" style="width: 100%; max-width: 400px; margin: 10px auto; padding: 15px; box-sizing: border-box; display: none;">
+                                                              <p><strong><i class="fas fa-truck" style="color: #01600c;"></i> Delivered:</strong> The product has been delivered.</p>
+                                                            </div>
+                                                            
+                                                            <div id="PendingDIV" class="alert alert-warning" role="alert" style="width: 100%; max-width: 400px; margin: 10px auto; padding: 15px; box-sizing: border-box; display: none;">
+                                                              <p><strong><i class="fas fa-clock" style="color: #252703;"></i> Delivery Pending:</strong> The product is still pending delivery.</p>
+                                                            </div>
+                                                            
+                                                                    
+                                                           
+                                                            </div>
+
+                                                             
+                                                          </div>
+
+                                                            </div>
+                                                        </div>
+                                                        
+                                                     
+                                                        
+                                                        <div class="row">
+                                                          
+                                                        </div>
+                                                        
+                                                        <div class="mt-4 text-center">
+                                                            <p class="text-muted mb-0">Thank you for your business!</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                      
+                      
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button type="button" hidden id="invoiceModel" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#fullScreenModal">
+                    
+                        </button>
+
+
+
 
     <div class="gototop js-top">
       <a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
@@ -375,6 +549,61 @@
     <!-- Main -->
     <script src="js/main.js"></script>
     <script>
+    
+    function invoicePage(data,status) {
+      
+
+    // document.getElementById('invoiceName').innerHTML = data.invoicData.product_name;
+    document.getElementById('invoiceName').innerHTML ='name:'+data.order.name;
+  
+    document.getElementById("addressMobile").innerHTML ='Mobile:'+data.order.mobile;
+    document.getElementById("addressPincode").innerHTML ='pincode:'+data.order.pincode
+    document.getElementById("addressLocality").innerHTML ='locality:'+data.order.locality
+    document.getElementById("addressAddress").innerHTML ='address:'+data.order.address
+    document.getElementById("addressCity").innerHTML ='city:'+data.order.city
+    document.getElementById("addressState").innerHTML ='state:'+data.order.state
+    document.getElementById("addressLandmark").innerHTML ='landmark:'+data.order.landmark
+    document.getElementById("addressAltmobile").innerHTML ='altmobile:'+data.order.altmobile
+    document.getElementById("addressAddresstype").innerHTML ='addresstype:'+data.order.addresstype
+ 
+    document.getElementById('oderImg').src = data.iamge;
+
+    document.getElementById('productName').innerHTML=data.invoicData.product_name;
+
+ document.getElementById('price').innerHTML='₹'+data.invoicData.price
+
+ document.getElementById('InvoiceQuantity').innerHTML=data.quantity
+
+ 
+document.getElementById('InvoiceTotal').innerHTML = `${data.quantity} X ${data.invoicData.product_name}= ₹${data.invoicData.price*data.quantity}`;
+
+document.getElementById('InvoiceLastTotol').innerHTML=`₹ ${data.invoicData.price*data.quantity}`
+  
+
+if(status==='pending '){
+  document.getElementById('PendingDIV').style.display = 'block';
+
+}else if(status==='delivered'){
+  document.getElementById('delivereDIV').style.display = 'block';
+
+}else if(status==='cancelled'){
+  document.getElementById('cancelDIV').style.display = 'block';
+
+}
+
+
+
+
+    document.getElementById('invoiceModel').click();
+}
+
+
+
+
+
+
+
+
 
     function ConformOderCancell(){
 		Swal.fire({

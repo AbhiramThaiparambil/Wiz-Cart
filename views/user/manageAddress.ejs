@@ -30,13 +30,15 @@
 								<% if (typeof user !== 'undefined') { %>
 								    <div  class="dropdown profile">
 										<a class="btn  dropdown-toggle" style="background-color: #88c8bc98;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-solid fa-user fa-bounce" style="color: #000000; font-size: 1.5rem;"></i> <%= user.name %>
+											<i class="fa-solid fa-user " style="color: #000000; font-size: 1.5rem;"></i> <%= user.name %>
 										</a>
 								
 										<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      <li><a class="dropdown-item" href="/home"><i class="fa-solid fa-house" style="color: #000000;"></i>HOME</a></li>
+
 											<li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-file-invoice"></i> MY ACCOUNT</a></li>
-											<li><a class="dropdown-item" href=""><i class="fa-solid fa-truck"></i> My Orders</a></li>
-											<li><a class="dropdown-item" href=""><i class="fa-solid fa-heart"></i> Wishlist</a></li>
+											<li><a class="dropdown-item" href="/getOrderHistory"><i class="fa-solid fa-truck"></i> My Orders</a></li>
+											<!-- <li><a class="dropdown-item" href=""><i class="fa-solid fa-heart"></i> Wishlist</a></li> -->
 											<li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
 										</ul>
 									</div>
@@ -71,6 +73,9 @@
       </div>
     </div>
   </nav>
+
+  
+  
 
   <div class="container light-style flex-grow-1 container-p-y">
     <h4 class="font-weight-bold py-3 mb-4">Account settings</h4>
@@ -131,7 +136,7 @@
                                 <form class="row g-3 needs-validation" action="/editAddress" method="post" novalidate>
 
                                     <!-- Hidden input to store the index -->
-                                    <input type="hidden" id="addressIndex" name="addressIndex">
+                                    <input type="hidden" id="addressIndex" name="addressIndex" >
                                     
                                     <div class="col-md-12">
                                         <label class="form-label">Name</label>

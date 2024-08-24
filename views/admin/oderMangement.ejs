@@ -1,6 +1,8 @@
 <%- include('./adminLayout/header') %>
 <link rel="stylesheet" href="css/mystyle.css">
+ <style>
 
+ </style>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -142,190 +144,7 @@
             <!-- Main Content -->
             <div id="content">
 
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                   
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Messages -->
-
-                       
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div>
-                        </li>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
-
-                    </ul>
-
-                </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -333,77 +152,125 @@
 
                
                 </div>
-                <!-- /.container-fluid -->
-              
-                <div class="container">
-                    <h2 class="mb-4">Product Orders</h2>
-                    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search...">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>userName</th>
-                                <th>status</th>
-                                <th>orderdate</th>
-                                <th>edit status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (orders.length === 0) { %>
-                                <div class="alert alert-info">No orders found.</div>
-                            <% } else { %>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>User Name</th>
-                                            <th>Status</th>
-                                            <th>Order Date</th>
-                                            <th>Edit Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% orders.forEach(order => { %>
-                                            <% order.product.forEach((product, index) => { %>
-                                                <% if (order.newone[index]) { %> <!-- Check if order.newone[index] exists -->
-                                                    <tr
-                                                    <% if (product.status == 'cancelled') { %>
-                                                      class="alert alert-danger"
-                                                    <% } else if (product.status == 'Pending') { %>
-                                                    class="alert alert-warning"
-                                                    <% } else if (product.status == 'Delivered') { %>
-                                                        class="alert alert-success"
-                                                    <% } %>
-                                                    >
-                            
-                                                        <td><%= order.newone[index].product_name || 'Product Name Not Available' %></td>
-                                                        <td><%= order.name %></td>
-                                                        <td><%= product.status %></td> <!-- Corrected: assuming you want to show each product's status -->
-                                                        <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
-                                                        <td>
-                                                            <form action="/update-status" method="POST" id="statusUpdate-<%= product._id %>">
-                                                                <input type="hidden" name="product_id" value="<%= product._id %>">
-                                                                <input type="hidden" name="object_id" value="<%= order._id %>">
-                                                                <select name="status" class="form-select">
-                                                                    <option value="pending" <%= product.status === 'pending' ? 'selected' : '' %>>Pending</option>
-                                                                    <option value="cancelled" <%= product.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
-                                                                    <option value="delivered" <%= product.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
-                                                                </select>
-                                                                <button type="button" onclick="editStatus('<%= product._id %>')" class="btn btn-primary mt-2">Update</button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                <% } %>
-                                            <% }) %>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                            <% } %>
-                            
-                            
-                        </tbody>
-                    </table>
+               
+<div class="container-fluid">
+    <h2 class="mb-4">Product Orders</h2>
+    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search...">
+
+    <% if (orders.length === 0) { %>
+        <div class="alert alert-info">
+            <div class="card">
+                <div class="card-body">
+                    No orders found.
                 </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="table-responsive text-dark">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                      
+                        <th>PRODUCT</th>
+                        <th>quantity</th>
+                        <th>USERNAME</th>
+                        <th>STATUS</th>
+                        <th>ORDER&nbspDATE</th>
+                        <th>CUSTOMERS&nbspDETAILS</th>
+                        <th>EDIT STATUS</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach((order, index) => { %>
+                        <% order.product.forEach((product, index) => { %>
+                            <% if (order.newone[index]) { %>
+                                <tr class="<%= product.status.toLowerCase() === 'cancelled' ? 'table-danger' : product.status.toLowerCase() === 'pending' ? 'table-warning' : product.status.toLowerCase() === 'delivered' ? 'table-success' : '' %> align-middle">
+                                   
+                                    <td><%= order.newone[index].product_name || 'Product Name Not Available' %></td>
+                                    <td><%= product.quantity %></td>
+                                     
+                                    <td><%= order.name %></td>
+                                    <td><%= product.status %></td>
+                                    <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                                    <td>
+                                        <div class="address p-3 border rounded text-dark">
+                                            <p>
+                                                <strong>Name:</strong> <%= order.shipment_address.name %>, 
+                                                <strong>Mobile:</strong> <%= order.shipment_address.mobile %>, 
+                                                <strong>Pincode:</strong> <%= order.shipment_address.pincode %>, 
+                                                <strong>Locality:</strong> <%= order.shipment_address.locality %>, 
+                                                <strong>Address:</strong> <%= order.shipment_address.address %>, 
+                                                <strong>City:</strong> <%= order.shipment_address.city %>, 
+                                                <strong>State:</strong> <%= order.shipment_address.pincode %>, 
+                                                <strong>Landmark:</strong> <%= order.shipment_address.landmark %>,                                             
+                                                <strong>Address Type:</strong> <%= order.shipment_address.addresstype %>
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action="/update-status" method="POST" id="statusUpdate-<%= product._id %>">
+                                            <input type="hidden" name="product_id" value="<%= product._id %>">
+                                            <input type="hidden" name="object_id" value="<%= order._id %>">
+                                            <select name="status" class="form-select">
+                                                <option value="pending" <%= product.status.toLowerCase() === 'pending' ? 'selected' : '' %>>Pending</option>
+                                                <option value="cancelled" <%= product.status.toLowerCase() === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                                <option value="delivered" <%= product.status.toLowerCase() === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                                            </select>
+                                            <button type="button" onclick="editStatus('<%= product._id %>')" class="btn btn-primary mt-2">Update</button>
+                                        </form>
+                                    </td>
+                                    
+                                </tr>
+                            <% } %>
+                        <% }) %>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <nav>
+            <ul class="pagination">
+                <% if (currentPage > 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/orderMangement?page=<%= currentPage - 1 %>&limit=<%= limit %>">Previous</a>
+                    </li>
+                <% } %>
+
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="/orderMangement?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                    </li>
+                <% } %>
+
+                <% if (currentPage < totalPages) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/orderMangement?page=<%= currentPage + 1 %>&limit=<%= limit %>">Next</a>
+                    </li>
+                <% } %>
+            </ul>
+        </nav>
+    <% } %>
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+    .card-body {
+        background: #f9f9f9;
+    }
+    .address {
+        background: #f8f9fa;
+    }
+</style>
+
+                
+               
+                
+             
+                
 
 
 

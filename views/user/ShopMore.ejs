@@ -35,7 +35,6 @@
 
 	<div id="page">
 		
-
 		<nav class="colorlib-nav" role="navigation">
 			<div class="top-menu">
 				<div class="container">
@@ -90,31 +89,32 @@
 
 								
 
-								<% if (typeof user !== 'undefined') { %>
-								    <div  class="dropdown profile">
-										<a class="btn  dropdown-toggle text-white" style="background-color: #2c313098;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-solid fa-user " style="color: #000000; font-size: 1.5rem;"></i> <%= user.name %>
+								  <% if (typeof user !== 'undefined' && user !== null) { %>
+								    <div class="dropdown profile " style="position: absolute; top: -80px; left: 92%; right: 0;">
+										<a class="btn dropdown-toggle text-white" style="background-color: #2c313098;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+											<i class="fa-solid fa-user" style="color: #000000; font-size: 1.5rem;"></i> <%=user.name %>
 										</a>
-								
+									
 										<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 											<li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-file-invoice"></i> MY ACCOUNT</a></li>
-											<li><a class="dropdown-item" href=""><i class="fa-solid fa-truck"></i> My Orders</a></li>
-											<li><a class="dropdown-item" href=""><i class="fa-solid fa-heart"></i> Wishlist</a></li>
+											<li><a class="dropdown-item" href="/getOrderHistory"><i class="fa-solid fa-truck"></i> My Orders</a></li>
+											<li><a class="dropdown-item" href="#"><i class="fa-solid fa-heart"></i> Wishlist</a></li>
 											<li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
 										</ul>
 									</div>
+									
 									<% } else { %>
-                                     
-										<div  class="dropdown profile">
+										<div class="dropdown profile " style="position: absolute; top: -80px; left: 92%; right: 0;">
 											<a class="btn  dropdown-toggle text-white" style="background-color: #2c313098;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
 												<i class="fa-solid fa-user " style="color: #000000; font-size: 1.5rem;"></i> LOGIN  %>
 											</a>
-									
+										
 											<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 											
 												<li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-from-bracket"></i> LOGIN</a></li>
 											</ul>
 										</div>
+									
 
 
 
@@ -138,14 +138,10 @@
 							<div class="row">
 								<div class="owl-carousel2">
 									<div class="item">
-										<div class="col">
-											<h3>.<a ></a></h3>
-										</div>
+										
 									</div>
 									<div class="item">
-										<div class="col">
-											<h3>.</a></h3>
-										</div>
+									
 									</div>
 								</div>
 							</div>
@@ -159,7 +155,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col">
-						<p class="bread"><span><a href="/home">Home</a></span> / <span>Women</span></p>
+						<p class="bread"><span><a href="/home">Home</a></span> / <span>shop</span></p>
 					</div>
 				</div>
 			</div>
@@ -488,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const products = productContainer.getElementsByClassName('product-entry');
 
     function filterProducts() {
-        const searchTerm = searchInput.value.toLowerCase();
+        const searchTerm = searchInput.value.toLowerCase().trim();
         const selectedCategory = categorySelect.value.toLowerCase();
         const minPrice = parseFloat(minPriceInput.value) || 0;
         const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
@@ -498,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const productCategory = product.dataset.category.toLowerCase();
             const productPrice = parseFloat(product.dataset.price);
 
-            const matchesSearch = productName.includes(searchTerm);
+            const matchesSearch = searchTerm === '' || productName.includes(searchTerm);
             const matchesCategory = selectedCategory === '' || productCategory === selectedCategory;
             const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
 
@@ -515,6 +511,9 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         filterProducts();
     });
+
+    // Trigger initial filter on page load
+    filterProducts();
 });
 </script>
 

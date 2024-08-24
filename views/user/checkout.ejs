@@ -69,22 +69,23 @@
 								
 										<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 											<li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-file-invoice"></i> MY ACCOUNT</a></li>
-											<li><a class="dropdown-item" href=""><i class="fa-solid fa-truck"></i> My Orders</a></li>
+											<li><a class="dropdown-item" href="/getOrderHistory"><i class="fa-solid fa-truck"></i> My Orders</a></li>
 											<li><a class="dropdown-item" href=""><i class="fa-solid fa-heart"></i> Wishlist</a></li>
 											<li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a></li>
 										</ul>
 									</div>
 									<% } else { %>
-
-										<li  class="has-dropdown profile "  style="color: aliceblue;">
-											<a  href="login"><i class="fa-regular fa-beat-fade fa-user" style="color: #000000;"></i>LOGIN</a>
-											<ul class="dropdown" style="background-color:#88c8bc;">
-												<li><a class="text-dark" href="login"><i class="fa-solid fa-wallet"></i>Login</a></li>
-												<!-- <li><a class="text-dark" href="order-complete.html"><i class="fa-solid fa-truck" style="color: #000000;"></i>my orders</a></li>
-												<li><a class="text-dark" href="add-to-wishlist.html"><i class="fa-solid fa-heart" style="color: #000000;"></i>Wishlist</a></li>
-												<li><a class="text-dark" href="product-detail.html"><i class="fa-solid fa-right-from-bracket" style="color: #000000;"></i>Log Out</a></li> -->
-											  </ul>
-										</li>
+                                     
+										<div  class="dropdown profile">
+											<a class="btn  dropdown-toggle text-white" style="background-color: #2c313098;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+												<i class="fa-solid fa-user " style="color: #000000; font-size: 1.5rem;"></i> LOGIN  %>
+											</a>
+									
+											<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+											
+												<li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-from-bracket"></i> LOGIN</a></li>
+											</ul>
+										</div>
 
 
 
@@ -108,14 +109,10 @@
 							<div class="row">
 								<div class="owl-carousel2">
 									<div class="item">
-										<div class="col">
-											<h3>.<a ></a></h3>
-										</div>
+										
 									</div>
 									<div class="item">
-										<div class="col">
-											<h3>.</a></h3>
-										</div>
+									
 									</div>
 								</div>
 							</div>
@@ -351,7 +348,7 @@
 
 										
 								
-									<button type="button"   onclick="orderPlaced()"   class="btn btn-secondary mt-3">Place Order</button>
+									<button type="button"   onclick="entercaptcha()"   class="btn btn-secondary mt-3">Place Order</button>
 							
 
 									</div>
@@ -589,6 +586,38 @@
 
 
 
+<!-- Trigger the modal with a button -->
+<button type="button" class="btn btn-primary btn-lg m-5"  id="captchaModel" data-bs-toggle="modal" hidden data-bs-target="#captchaModal">
+
+</button>
+
+<!-- captcha Modal -->
+<div class="modal fade" id="captchaModal" tabindex="-1" aria-labelledby="captchaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="captchaModalLabel">"Enter this captcha to confirm your order"</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="card border-0">
+                  <div class="card-body p-4">
+                      <h1 id="captcha"  class=" text-primary text-center p-3 mb-3 bg-light rounded"></h1>
+                      <div class="input-group mb-3">
+                          <input type="text" id="userInput" class="form-control" placeholder="Enter CAPTCHA">
+                          <button onclick="refreshCaptcha()" class="btn btn-secondary" type="button">
+                              <i class="bi bi-arrow-clockwise"></i> Refresh
+                          </button>
+                      </div>
+                      <button onclick="checkCaptcha()" class="btn btn-primary w-100">Verify</button>
+                      <p id="result" class="mt-3 text-center"></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
 
 
 
@@ -612,6 +641,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+
+
     
       let  totalAmount 
 
@@ -1021,6 +1053,7 @@ function deleteCofo() {
 
 
 let PaymentMethod;
+
 function getSelectedPaymentMethod() {
   // Select all radio buttons with the name "optradio"
   const radios = document.querySelectorAll('input[name="optradio"]');
@@ -1042,17 +1075,133 @@ function getSelectedPaymentMethod() {
 // Example usage: Call the function when needed, such as on form submission
 document.querySelector('form').addEventListener('submit', (event) => {
   event.preventDefault(); // Prevent actual form submission
-  const paymentMethod = getSelectedPaymentMethod();
+   getSelectedPaymentMethod();
+  return paymentMethod;
   console.log('Payment Method:', PaymentMethod);
 });
 
 
 
+// captcha script
+
+
+function generateCaptcha() {
+        return Math.floor(1000 + Math.random() * 9000).toString();
+    }
+
+    function refreshCaptcha() {
+        document.getElementById('captcha').innerText = generateCaptcha();
+        document.getElementById('userInput').value = '';
+        document.getElementById('result').innerText = '';
+    }
+
+    function checkCaptcha() {
+        const userInput = document.getElementById('userInput').value;
+        const captcha = document.getElementById('captcha').innerText;
+        const result = document.getElementById('result');
+        
+        if (userInput === captcha) {
+            result.innerText = 'CAPTCHA verified successfully!';
+            Swal.fire({
+
+  title: "confirm your order?",
+ 
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "confirm",
+  imageUrl: "https://cdn.dribbble.com/users/988145/screenshots/4053148/media/5a1efe37055d3fd740fee6bf10318d4a.gif",
+  imageWidth: 350,
+  imageHeight: 250,
+
+
+}).then((result) => {
+  if (result.isConfirmed) {
+    orderPlaced()
+  }
+});
+        } else {
+            result.innerText = 'Incorrect CAPTCHA. Please try again.';
+            result.className = 'mt-3 text-center text-danger';
+        }
+    }
+
+    document.getElementById('captchaModal').addEventListener('show.bs.modal', refreshCaptcha);
 
 
 
+    function entercaptcha(){
+      
+     function PaymentMethodValidation(){
+      getSelectedPaymentMethod();
+  
 
-function orderPlaced() {
+  if (PaymentMethod === undefined) {
+    Swal.fire({
+      title: 'Oops!',
+      text: 'Select a payment method',
+      icon: 'error',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'custom-popup',
+        title: 'custom-title',
+        content: 'custom-content',
+        confirmButton: 'custom-confirm-button'
+      },
+    });
+    return false;
+  }else{
+    return true
+  }
+   }
+
+   function addressValidation(){ 
+  // Get the selected radio button value for the address
+  const radios = document.querySelectorAll('input[name="is_active"]');
+  let selectedValue;
+  for (const radio of radios) {
+    if (radio.checked) {
+      selectedValue = radio.value;
+      break;
+    }
+  }
+
+  if (!selectedValue) {
+    Swal.fire({
+      title: 'Oops!',
+      text: 'Select an address',
+      icon: 'error',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'custom-popup',
+        title: 'custom-title',
+        content: 'custom-content',
+        confirmButton: 'custom-confirm-button'
+      },
+    });
+    return false;
+  }else{
+    return true
+  }
+     }
+ 
+
+
+    if(PaymentMethodValidation()&&addressValidation()){
+
+      document.getElementById('captchaModel').click()
+
+    }
+
+
+      
+  
+     
+  
+
+  }
+
+  function orderPlaced() {
   getSelectedPaymentMethod();
   
   // Check if PaymentMethod is set
@@ -1172,6 +1321,15 @@ function orderPlaced() {
   });
 }
 
+
+
+
+
+
+
+
+
+  </script>
 
 
 

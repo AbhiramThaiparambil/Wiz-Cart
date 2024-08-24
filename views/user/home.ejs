@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="css/mystyle.css">
 
-	<div class="colorlib-loader"></div>
+	
 
 	<div id="page">
 		
@@ -62,9 +62,9 @@
 								
 
 								<% if (typeof user !== 'undefined') { %>
-								    <div  class="dropdown profile">
+								    <div  class="dropdown profile" style="width: 100px;" >
 										<a class="btn  dropdown-toggle text-white" style="background-color: #2c313098;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-solid fa-user " style="color: #000000; font-size: 1.5rem;"></i> <%= user.name %>
+											<i class="fa-solid fa-user " style="color: #000000; font-size: 1.5rem;"></i> <%=user.name %>
 										</a>
 								
 										<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -109,14 +109,10 @@
 							<div class="row">
 								<div class="owl-carousel2">
 									<div class="item">
-										<div class="col">
-											<h3>.<a ></a></h3>
-										</div>
+										
 									</div>
 									<div class="item">
-										<div class="col">
-											<h3>.</a></h3>
-										</div>
+									
 									</div>
 								</div>
 							</div>

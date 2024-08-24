@@ -91,7 +91,7 @@
 								<li><a href="">upcoming launches</a></li>
 								<li><a href="">About</a></li>
 								<li><a href="">Contact</a></li>
-								<li class="cart"><a href=""><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+								
 
 								<% if (typeof user !== 'undefined') { %>
 									<li class="has-dropdown profile" style="color: rgb(0, 0, 0);">
@@ -111,11 +111,7 @@
 									<% } else { %>
 
 										<li class="has-dropdown profile  " style="color: aliceblue;">
-											<a  href="men.html"><i class="fa-regular fa-beat-fade fa-user" style="color: #000000;"></i>LOGIN</a>
-											<ul class="dropdown" style="background-color:#88c8bc;">
-												<li><a class="text-dark" href="checkout.html"><i class="fa-solid fa-wallet"></i>Login</a></li>
 										
-											  </ul>
 										</li>
 
 
@@ -140,14 +136,10 @@
 							<div class="row">
 								<div class="owl-carousel2">
 									<div class="item">
-										<div class="col">
-											<h3><a >.</a></h3>
-										</div>
+										
 									</div>
 									<div class="item">
-										<div class="col">
-											<h3></a>.</h3>
-										</div>
+										
 									</div>
 								</div>
 							</div>
@@ -172,8 +164,9 @@
 			<div class="container">
 				<div class="row row-pb-lg product-detail-wrap">
 
-
+                    
                     <div class="col-sm-8">
+						
 						<div class="owl-carousel " style="width: 450px;">
 							<% singleProduct.product_img.forEach(e => { %>
 								<div class="item">
@@ -189,6 +182,7 @@
 
 					<div class="col-sm-4">
 						<div class="product-desc">
+							<p><%=singleProduct.product_name %></p>
 							<h3></h3>
 							<p class="price">
 								<span> ₹<%=singleProduct.price%></span> 
@@ -248,46 +242,44 @@
                   	</div>
                   	<div class="row">
 						<div class="col-sm-12 text-center"> 
-							<% if (isCartexist == '1') { %>
-								<p class="addtocart">
-									<a href="/cart" class="btn btn-primary btn-addtocart text-light" style="background-color: rgb(66, 66, 66);">
-										<i class="fa-solid fa-cart-shopping"></i> GO TO CART
-									</a>
-								</p>
-							<% } else if (singleProduct.in_stock == 0) { %>
-								<p class="addtocart">
-									<a href="" class="btn btn-danger btn-addtocart text-light">
-										<i class="fa-solid fa-cart-shopping"></i> Out of stock
-									</a>
-								</p>
-							<% } else { %>
-								<p class="addtocart" onclick="addtoCart()">
-									<a class="btn btn-primary btn-addtocart text-light">
-										<i class="icon-shopping-cart"></i> Add to Cart
-									</a>
-								</p>
-							<% } %>
-						</div>
-						
-						<% if (singleProduct.in_stock <= 5) { %>
+							<!-- Add to Cart Button -->
+<p class="addtocart" id="addToCartContainer">
+    <a class="btn btn-primary btn-addtocart text-light" onclick="addtoCart()">
+        <i class="icon-shopping-cart"></i> Add to Cart
+    </a>
+</p>
+
+<!-- Go to Cart Button -->
+<p class="addtocart" id="goToCartContainer" style="display: none;">
+    <a href="/cart" class="btn btn-primary btn-addtocart text-light" style="background-color: rgb(66, 66, 66);">
+        <i class="fa-solid fa-cart-shopping"></i> GO TO CART
+    </a>
+</p>
+
+<% if(singleProduct.in_stock==0){%>
+   
+	<div class="stock-alert text-danger">
+		<i class="fas fa-exclamation-triangle stock-alert-icon"></i>
+        <strong>OUT OF STOCK!!</strong>
+        <!-- <p class="mb-0">We apologize for the inconvenience</p> -->
+    </div>
+
+
+<%}else if(singleProduct.in_stock <= 5) { %>
+    <div class="stock-alert text-danger">
+        <i class="fas fa-exclamation-circle stock-alert-icon"></i>
+        <strong>Hurry up!!</strong>
+        <p class="mb-0">Only <%= singleProduct.in_stock %> left in stock!</p>
+    </div>
+<% } else if (singleProduct.in_stock <= 10) { %>
+    <div class="stock-alert text-danger">
+        <i class="fas fa-exclamation-circle stock-alert-icon"></i>
+        <strong>Hurry up!!</strong>
+        <p class="mb-0">Limited stock left!</p>
+    </div>
+<% } %>
+
 							
-							<div class="stock-alert text-danger">
-								<i class="fas fa-exclamation-circle stock-alert-icon"></i>
-								<strong>Hurry up!!</strong>
-								<p class="mb-0">Only <%= singleProduct.in_stock %> left in stock!</p>
-							  </div>
-
-						<% }else if(singleProduct.in_stock <= 10){%>
-                       
-                    <div class="stock-alert text-danger">
-								<i class="fas fa-exclamation-circle stock-alert-icon"></i>
-								<strong>Hurry up!!</strong>
-								<p class="mb-0">limited stock left!</p>
-							  </div>
-
-
-
-						<% } %>
 							</div>
 						</div>
 					</div>
@@ -313,15 +305,12 @@
 
 								  <div class="tab-content" id="pills-tabContent">
 								    <div class="tab-pane border fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
-								      <p> <%= singleProduct.product_description%></p>
-										<p><%= singleProduct.product_description%></p>
-										<!-- <ul>
-											<li>The Big Oxmox advised her not to do so</li>
-											<li>Because there were thousands of bad Commas</li>
-											<li>Wild Question Marks and devious Semikoli</li>
-											<li>She packed her seven versalia</li>
-											<li>tial into the belt and made herself on the way.</li>
-										</ul> -->
+								     
+										
+										<ul>
+											<li><%= singleProduct.product_description%></li>
+											
+										</ul>
 								    </div>
 
 								    <div class="tab-pane border fade" id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
@@ -571,6 +560,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/jquery.stellar.min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 	<script>
 		$(document).ready(function(){
@@ -593,12 +583,12 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		    });
 
 		     $('.quantity-left-minus').click(function(e){
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
+
+				e.preventDefault();
+		       
 		        var quantity = parseInt($('#quantity').val());
 		        
-		        // If is not undefined
+		     
 		      
 		            // Increment
 		            if(quantity>0){
@@ -609,14 +599,74 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		});
 
 
-     function addtoCart(){
 		
-		const quantitiy =document.getElementById('quantity').value
-		const productId=document.getElementById('hiddenProductId').value
 		
-		window.location.href=`/addtocart?productId=${productId}&quantity=${quantitiy}`
-		
-	 }
+  function addtoCart() {
+	const stock = <%=singleProduct.in_stock%>;
+  if(stock== 0){
+	const Toast = Swal.mixin({
+  toast: true,
+  position: 'bottom',
+  showConfirmButton: false,
+  timer: 7000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  },
+  background: '#dc3545',
+  color: 'white'
+})
+
+Toast.fire({
+  icon: 'error',
+  title: 'Product out of stock',
+  text: 'We apologize for the inconvenience.'
+})
+	
+	return
+  }
+
+
+    const quantity = document.getElementById('quantity').value;
+    const productId = document.getElementById('hiddenProductId').value;
+    
+    
+   
+    const Toast = Swal.mixin({
+  toast: true,
+  position: 'bottom',
+  showConfirmButton: false,
+  timer: 1500,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+
+Toast.fire({
+  icon: 'success',
+  title: 'successfully item add to cart'
+})
+
+window.location.href = `/addtocart?productId=${productId}&quantity=${quantity}`;
+
+	document.getElementById('addToCartContainer').style.display = 'none';
+    document.getElementById('goToCartContainer').style.display = 'block';
+  }
+
+
+  window.onload = function() {
+    const isCartExist = '<%= isCartexist %>';
+    if (isCartExist === '1') {
+      document.getElementById('addToCartContainer').style.display = 'none';
+      document.getElementById('goToCartContainer').style.display = 'block';
+    }
+  };
+
+
+
 
 	</script>
 
